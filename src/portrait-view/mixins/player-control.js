@@ -1,0 +1,157 @@
+import { checkDomClick } from '../../assets/utils/player-utils';
+import { bus, PLAYER_CLICK, UPDATE_PLAYER_STATE } from '../../assets/utils/event-bus';
+import PortraitPlayer from '../../assets/live-sdk/portrait-control';
+import channelApi from '../../assets/api/channel';
+import { liveSdk } from '../../assets/live-sdk/live-sdk';
+
+const defaultState = {
+  liveStatus: '', // 直播状态
+  streamType: 'client', // 推流方式
+  playerStatus: 'stoped', // 视频是否正在播放，playing表示正在播放，stoped表示暂停
+  playerMode: 'video', // 播放器播放模式，video表示视频，audio表示音频
+  // ----- 清晰度 ----- //
+  multirateEnabled: 'N', // 多码率开关
+  definitions: [], // 多码率列表
+  currentDefinition: 0, // 当前的码率
+  // ----- 其他 ----- //
+  warmupType: '', // 暖场类型，img: 暖场图片，video: 暖场视频
+  logoHref: '', // logo跳转连接
+  warmupImgClickUrl: '', // 暖场为图片时点击的跳转连接
+  advertHref: '', // 片头广告跳转连接
+};
+
+export default {
+  data() {
+    return {
+      playerState: {
+        ...defaultState
+      },
+      // 点击次数
+      clickCount: 0,
+      clickTimer: null,
+      playerCtrl: null,
+    };
+  },
+
+  provide() {
+    return {
+      portrait: this
+    };
+  },
+
+  methods: {
+    async handlePlayerInit() {
+      // 重新获取流信息
+      const { data: detailData } = await channelApi.getChannelDetail();
+
+      this.playerState = {
+        ...defaultState
+      };
+
+      // 码率信息
+      const levels = liveSdk.player.levels;
+      this.playerState.multirateEnabled = levels ? 'Y' : 'N';
+      if (liveSdk.player.levels) {
+        const levelData = ['流畅', '高清', '超清'];
+        this.playerState.definitions = levelData.filter((item, index) => index <= liveSdk.player.levels);
+        this.playerState.definitions = this.playerState.definitions.map((item, index) => ({ name: item, value: index }));
+        this.playerState.currentDefinition = liveSdk.player.level;
+      }
+
+      // 暖场信息
+      let warmupType = '';
+      if (this.ynToBool(detailData.warmUpEnabled)) {
+        let warmupImgClickUrl = '';
+        if (detailData.warmUpType === 'warmImage') {
+          warmupType = 'img';
+          warmupImgClickUrl = detailData.imageClickUrl;
+        } else if (detailData.warmUpType === 'warmVideo') {
+          warmupType = 'video';
+        }
+        this.playerState.warmupType = warmupType;
+        this.playerState.warmupImgClickUrl = warmupImgClickUrl;
+      }
+
+      // logo信息
+      this.playerState.logoHref = detailData.logoHref;
+      // 片头广告
+      const advertHref = detailData.advertHref;
+      this.playerState.advertHref = advertHref;
+      // 直播状态
+      this.playerState.liveStatus = this.channelDetail.watchStatus;
+      // 推流类型
+      this.playerState.streamType = detailData.streamType;
+
+      this.playerCtrl = new PortraitPlayer({
+        liveStatus: this.channelDetail.watchStatus,
+        streamType: detailData.streamType,
+        resolutionWidth: detailData.resolutionWidth,
+        resolutionHeight: detailData.resolutionHeight
+      });
+    },
+
+    openUrl(url) {
+      if (url) {
+        window.open(url, '_blank', 'noopenner=true');
+      }
+    },
+
+    handlePlayerClick(event) {
+      // 正在显示暂无直播，忽略不处理
+      const notLiveDom = document.querySelector('[data-not-live]');
+      if (notLiveDom) { return; }
+
+      // 正在显示广告
+      const advertDom = document.querySelector('.plv-live-ad__img');
+      if (advertDom && checkDomClick(advertDom, event)) {
+        this.openUrl(this.playerState.advertHref);
+        return;
+      }
+
+      // 判断logo点击
+      const logoDom = document.querySelector('.plv-live-logo');
+      if (logoDom && checkDomClick(logoDom, event)) {
+        this.openUrl(this.playerState.logoHref);
+        return;
+      }
+
+      // 正在显示暖场图片
+      const warmImgDom = document.querySelector('.plv-live-warmUp .plv-cover-box');
+      if (warmImgDom && checkDomClick(warmImgDom, event)) {
+        this.openUrl(this.playerState.warmupImgClickUrl);
+        return;
+      }
+
+      const adverDom = document.querySelector('.plv-live-ad');
+      if (adverDom) { return; }
+
+      this.clickCount++;
+      this.clickTimer && clearTimeout(this.clickTimer);
+      this.clickTimer = setTimeout(() => {
+        if (this.playerState.playerStatus === 'stoped') {
+          this.playerCtrl.resume();
+        } else if (this.clickCount >= 2) {
+          this.playerCtrl.pause();
+        }
+        this.clickCount = 0;
+        this.clickTimer = null;
+      }, 200);
+    },
+
+    handlePlayerStateChange(key, value) {
+      this.$set(this.playerState, key, value);
+    }
+  },
+
+  mounted() {
+    bus.$on(PLAYER_CLICK, this.handlePlayerClick);
+    bus.$on(UPDATE_PLAYER_STATE, this.handlePlayerStateChange);
+  },
+
+  beforeDestroy() {
+    clearTimeout(this.clickTimer);
+    this.clickTimer = null;
+    bus.$off(PLAYER_CLICK, this.handlePlayerClick);
+    bus.$off(UPDATE_PLAYER_STATE, this.handlePlayerStateChange);
+  }
+};

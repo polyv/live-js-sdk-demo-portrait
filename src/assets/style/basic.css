@@ -1,0 +1,47 @@
+/* 清浮动 */
+.g-clearfix:after {
+  display: block;
+  overflow: hidden;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+  content: '.';
+}
+
+/* 单行内容，如有超出则以省略号结尾 */
+.g-singleline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 多行内容，只兼容webkit（默认 2 行） */
+.g-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* 图片容器（填满不拉伸） */
+.g-img-cover {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* 小图标 */
+.g-icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* 对于 iphone x 系列采用安全距离作为底部 padding */
+.g-iphone-x-pb {
+  /* ios < 11.2 */
+  padding-bottom: constant(safe-area-inset-bottom);
+  /* ios >= 11.2 */
+  padding-bottom: env(safe-area-inset-bottom);
+}
