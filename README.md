@@ -103,7 +103,7 @@ Vue.use(PortraitView, {
 - 目前暂不支持云课堂（三分屏）频道。
 
 ### 安全性说明（重要）
-实际使用时，请不要将 appSecret 暴露在前端，本 demo 仅为演示。
+- 实际使用时，请不要将 appSecret 暴露在前端，本 demo 仅为演示。
 
 ## 其他文档
 您还可以结合 POLYV 官方文档查阅 demo 源码：
