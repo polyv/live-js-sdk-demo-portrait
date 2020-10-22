@@ -41,7 +41,7 @@
 
 <script>
   new PolyvPortraitWatch({
-    el: '#polyv-watch',
+    el: '#portrait-watch',
     appId: 'APP_ID',
     appSecret: 'APP_SECRET',
     channelId: 'CHANNEI_ID',
