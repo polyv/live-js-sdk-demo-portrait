@@ -87,14 +87,14 @@ Vue.use(PortraitView, {
 ### PolyvPortraitWatch（PortraitView） 的参数说明
 | 参数 | 说明 | 类型 | 是否必填 |
 | --- | --- | --- | --- |
-| el | 挂载组件的元素，可以为选择器或元素 | String、Element | 是 |
+| el | 挂载组件的元素，可以为选择器或元素 | string、HTMLElement | 是 |
 | appId | 保利威后台的 appId | string | 是 |
-| appSecret | 保利威后台的 appSecret | String | 是 |
-| channelId | 频道号 | String | 是 |
+| appSecret | 保利威后台的 appSecret | string | 是 |
+| channelId | 频道号 | string | 是 |
 | user | 用户信息 | Object | 是 |
-| user.userId | 用户id | String | 是 |
-| user.userName | 用户昵称 | String | 是 |
-| user.avatar | 用户头像 | String | 否 |
+| user.userId | 用户id | string | 是 |
+| user.userName | 用户昵称 | string | 是 |
+| user.avatar | 用户头像 | string | 否 |
 
 
 ## 补充说明
