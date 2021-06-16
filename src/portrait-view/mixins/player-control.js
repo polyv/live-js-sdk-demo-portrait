@@ -1,18 +1,24 @@
+import Vue from 'vue';
 import { checkDomClick } from '../../assets/utils/player-utils';
 import { bus, PLAYER_CLICK, UPDATE_PLAYER_STATE } from '../../assets/utils/event-bus';
 import PortraitPlayer from '../../assets/live-sdk/portrait-control';
 import channelApi from '../../assets/api/channel';
 import { liveSdk } from '../../assets/live-sdk/live-sdk';
+import { config } from '../../assets/utils/config';
 
+// 播放器默认数据
 const defaultState = {
-  liveStatus: '', // 直播状态
+  liveStatus: '', // 直播状态, live-直播中, end-无直播
   streamType: 'client', // 推流方式
   playerStatus: 'stoped', // 视频是否正在播放，playing表示正在播放，stoped表示暂停
   playerMode: 'video', // 播放器播放模式，video表示视频，audio表示音频
+  isPlayed: false, // 是否已播放过视频
   // ----- 清晰度 ----- //
   multirateEnabled: 'N', // 多码率开关
   definitions: [], // 多码率列表
   currentDefinition: 0, // 当前的码率
+  // ----- 倍速 ----- //
+  currentRate: 1, // 当前倍速
   // ----- 其他 ----- //
   warmupType: '', // 暖场类型，img: 暖场图片，video: 暖场视频
   logoHref: '', // logo跳转连接
@@ -26,6 +32,7 @@ export default {
       playerState: {
         ...defaultState
       },
+      vid: null,
       // 点击次数
       clickCount: 0,
       clickTimer: null,
@@ -33,10 +40,21 @@ export default {
     };
   },
 
-  provide() {
-    return {
-      portrait: this
-    };
+  watch: {
+    documentVisible: {
+      handler(visible) {
+        if (visible) {
+          this.$nextTick(() => {
+            if (liveSdk?.player?.player?.ppt?.resize) {
+              liveSdk.player.player.ppt.resize();
+            }
+          });
+        }
+        Vue.nextTick(() => {
+          this.playerCtrl && this.playerCtrl.setVideoSize();
+        });
+      }
+    }
   },
 
   methods: {
@@ -53,7 +71,7 @@ export default {
       this.playerState.multirateEnabled = levels ? 'Y' : 'N';
       if (liveSdk.player.levels) {
         const levelData = ['流畅', '高清', '超清'];
-        this.playerState.definitions = levelData.filter((item, index) => index <= liveSdk.player.levels);
+        this.playerState.definitions = levelData.filter((item, index) => index < liveSdk.player.levels);
         this.playerState.definitions = this.playerState.definitions.map((item, index) => ({ name: item, value: index }));
         this.playerState.currentDefinition = liveSdk.player.level;
       }
@@ -73,21 +91,28 @@ export default {
       }
 
       // logo信息
-      this.playerState.logoHref = detailData.logoHref;
+      this.playerState.logoHref = detailData.playerLogoHref;
       // 片头广告
       const advertHref = detailData.advertHref;
       this.playerState.advertHref = advertHref;
       // 直播状态
-      this.playerState.liveStatus = this.channelDetail.watchStatus;
+      this.playerState.liveStatus = this.channelDetail.watchStatus === 'live' ? 'live' : 'end';
       // 推流类型
       this.playerState.streamType = detailData.streamType;
 
       this.playerCtrl = new PortraitPlayer({
+        portrait: this,
         liveStatus: this.channelDetail.watchStatus,
         streamType: detailData.streamType,
         resolutionWidth: detailData.resolutionWidth,
         resolutionHeight: detailData.resolutionHeight
       });
+      if (liveSdk?.player?.player?.ppt) {
+        this.portraitState.documentProportion = liveSdk.player.player.ppt.prop;
+        liveSdk.player.player.ppt.on('propChange', (prop) => {
+          this.$set(this.portraitState, 'documentProportion', prop);
+        });
+      }
     },
 
     openUrl(url) {
@@ -144,6 +169,7 @@ export default {
   },
 
   mounted() {
+    this.vid = config.vid;
     bus.$on(PLAYER_CLICK, this.handlePlayerClick);
     bus.$on(UPDATE_PLAYER_STATE, this.handlePlayerStateChange);
   },

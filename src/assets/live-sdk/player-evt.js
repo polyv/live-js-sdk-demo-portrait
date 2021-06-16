@@ -10,4 +10,5 @@ export default {
   LINE_CHANGE: 'lineChange', // 线路变化
   PLAY_FAILE: 'play_faile', // 播放失败
   LEVEL_CHANGE: 'levelChange', // 清晰度变化
+  RATE_CHANGE: 'rateChange', // 倍速变化
 };

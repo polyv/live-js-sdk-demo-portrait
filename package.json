@@ -14,6 +14,7 @@
     "jraiser": "^3.1.5",
     "lodash-es": "^4.17.15",
     "swiper": "^5.3.6",
+    "vconsole": "^3.3.4",
     "vue": "^2.6.10",
     "vue-awesome-swiper": "^4.0.3"
   },

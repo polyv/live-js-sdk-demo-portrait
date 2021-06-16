@@ -1,29 +1,16 @@
 <template>
   <div class="c-msg-container">
-    <span
-      v-if="actor"
-      :class="[
-        'c-msg-container__label',
-        'c-msg-container__label--' + userType
-      ]"
-      :style="{
-        background: actorColor
-      }">
-      <span>{{ actor }}</span>
-    </span>
+    <actor-label
+      :actor="actor"
+      :userType="userType"
+      v-if="actor" />
     <span class="c-msg-container__nick">{{ nick }}：</span>
     <slot></slot>
   </div>
 </template>
 
 <script>
-// 标签颜色
-const actorColor = {
-  manager: '#33BBC5',
-  assistant: '#598FE5',
-  teacher: '#F09343',
-  guest: '#EB6165'
-};
+import ActorLabel from './ActorLabel';
 
 export default {
   props: {
@@ -40,9 +27,10 @@ export default {
     userType() {
       return this.msg?.user?.userType;
     },
-    actorColor() {
-      return this.userType ? actorColor[this.userType] : '';
-    }
+  },
+
+  components: {
+    ActorLabel
   }
 };
 </script>
@@ -56,7 +44,6 @@ export default {
   font-size: 12px;
   color: #fff;
   margin-right: 4px;
-  padding: 0 4px;
   border-radius: 6px;
   float: left;
   height: 12px;
@@ -64,13 +51,14 @@ export default {
   position: relative;
   top: 3px;
   vertical-align: middle;
-}
-.c-msg-container__label.c-msg-container__label--manager {
-  padding: 0 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .c-msg-container__label span {
   display: inline-block;
   transform: scale(.75, .75);
+  word-break: keep-all;
 }
 .c-msg-container__nick {
   color: #FFD16B;

@@ -41,3 +41,17 @@ export const getRandom = (min, max, dot = 0) => {
   }
   return result;
 };
+
+// 秒数转时间字符串
+export const formTimeSecond = (t) => {
+  t = Math.floor(t) || 0;
+  const hs = 60 * 60;
+  const h = Math.floor(t / hs);
+  const m = Math.floor((t % hs) / 60);
+  const s = t - (h * hs) - (m * 60);
+  const addZero = a => {
+    if (!a || a === Infinity) { return '00'; }
+    return String(a).length === 1 ? `0${a}` : a;
+  };
+  return `${addZero(h)}:${addZero(m)}:${addZero(s)}`;
+};

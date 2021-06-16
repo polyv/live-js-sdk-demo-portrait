@@ -11,10 +11,10 @@ import PortraitView from './portrait-view/portrait-view';
 export default {
   install: (Vue, config = {}) => {
     // 更新app信息
-    const { appId, appSecret, verifyUrl, channelId, user } = config;
+    const { appId, appSecret, verifyUrl, channelId, user, vid, vodType } = config;
     checkParams(config, ['appId', 'channelId', 'user']);
     checkParams(config.user, ['userId', 'userName']);
-    updateConfig({ appId, appSecret, verifyUrl, channelId, user });
+    updateConfig({ appId, appSecret, verifyUrl, channelId, user, vid, vodType });
 
     // 全局混入
     Vue.mixin({

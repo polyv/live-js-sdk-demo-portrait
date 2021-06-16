@@ -1,3 +1,4 @@
+<!-- @file 欢迎语组件 -->
 <template>
   <div class="c-welcome">
     <transition

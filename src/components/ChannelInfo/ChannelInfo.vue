@@ -24,12 +24,6 @@ import { liveSdk, PolyvLiveSdk } from '../../assets/live-sdk/live-sdk';
 export default {
   mixins: [channelBaseMixin],
 
-  data() {
-    return {
-      onlineUserNumber: 0,
-    };
-  },
-
   computed: {
     publisher() {
       return this.channel?.publisher;
@@ -41,7 +35,9 @@ export default {
 
   methods: {
     handleOnlineChange(event, data) {
-      this.onlineUserNumber = data.onlineUserNumber;
+      if (this.portrait) {
+        this.portrait.$set(this.portrait.portraitState, 'onlineUserNumber', data.onlineUserNumber);
+      }
     }
   },
 

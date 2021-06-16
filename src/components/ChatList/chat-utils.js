@@ -4,6 +4,8 @@ import { msgSource } from '../../assets/chat/constants';
 export const ONE_PAGE_MSG_COUNT = 10;
 // 清理显示时最多显示数目
 export const SURPLUS_COUNT = 100;
+// 聊天室只显示的类型
+export const needTypes = [msgSource.chatImg, msgSource.speak];
 
 // 获取列表内的总值
 export const getListAllCount = (list) => {
@@ -18,13 +20,18 @@ export const getListAllCount = (list) => {
   return count;
 };
 
+/**
+ * 截取一个列表，保留最新的max长度
+ * 被移除的消息转为新列表最旧一个的hiddenCount
+ * 注意：list的顺序是[旧->新]
+ */
 export const filterMaxList = (list, max = SURPLUS_COUNT) => {
   let count = 0;
   let lastIndex = -1;
   const newList = [];
   for (let i = list.length - 1; i >= 0; i--) {
     const item = list[i];
-    if (item.msgSource === msgSource.chatImg || item.msgSource === msgSource.speak) {
+    if (needTypes.indexOf(item.msgSource) !== -1) {
       count++;
     }
     if (count === max) {
@@ -41,12 +48,13 @@ export const filterMaxList = (list, max = SURPLUS_COUNT) => {
   return newList;
 };
 
+// 处理历史消息列表，将列表中不需要的消息转换成hiddenCount
 export const handleHistory = (list) => {
   let otherCount = 0;
   const newList = [];
   for (let i = list.length - 1; i >= 0; i--) {
     const item = list[i];
-    if (item.msgSource === msgSource.chatImg || item.msgSource === msgSource.speak) {
+    if (needTypes.indexOf(item.msgSource) !== -1) {
       newList.unshift({
         ...item,
         hiddenCount: otherCount

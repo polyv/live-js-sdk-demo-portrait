@@ -1,50 +1,76 @@
 <template>
   <div
     v-if="channelDetail"
-    class="c-portrait-view">
+    class="c-portrait-view"
+    :style="watchStyle">
     <!-- 播放器 -->
-    <player @player-init="handlePlayerInit" />
+    <player
+      :channel="channelDetail"
+      @player-init="handlePlayerInit" />
 
-    <swiper
-      class="c-portrait-view__swiper"
-      :options="swiperOptions">
-      <swiper-slide>
-        <swiper-page>
-          <div class="c-portrait-view__bulletin__intro">
-            <!-- 公告 -->
-            <bulletin-panel />
-            <!-- 直播介绍 -->
-            <intro :channel="channelDetail" />
-          </div>
-        </swiper-page>
-      </swiper-slide>
+    <div class="c-portrait-view__swiper__wrap">
+      <swiper
+        class="c-portrait-view__swiper"
+        :options="swiperOptions">
+        <swiper-slide>
+          <swiper-page>
+            <boundary-wrap v-if="channelInfoSeat === 0">
+              <!-- 频道基本信息 -->
+              <channel-info :channel="channelDetail" />
+            </boundary-wrap>
+            <div class="c-portrait-view__bulletin__intro">
+              <!-- 公告 -->
+              <bulletin-panel />
+              <!-- 直播介绍 -->
+              <intro :channel="channelDetail" />
+            </div>
+          </swiper-page>
+        </swiper-slide>
 
-      <swiper-slide>
-        <swiper-page>
-          <!-- 频道基本信息 -->
-          <channel-info :channel="channelDetail" />
-          <!-- 滑动公告 -->
-          <bulletin-slide />
-          <!-- 聊天室 -->
-          <chat :channel="channelDetail" />
-          <!-- 打赏 -->
-          <donate
-            v-if="donateGoodEnabled"
-            :channel="channelDetail" />
-          <!-- 商品推送气泡 -->
-          <product-bubble v-if="productEnabled" />
-          <!-- 商品列表 -->
-          <product-list v-if="productEnabled" />
-          <!-- 播放器控制器 -->
-          <player-ui :channel="channelDetail" />
-        </swiper-page>
-      </swiper-slide>
+        <swiper-slide>
+          <swiper-page>
+            <!-- 频道基本信息 -->
+            <channel-info
+              v-if="channelInfoSeat === 1"
+              :channel="channelDetail" />
+            <!-- 滑动公告 -->
+            <boundary-wrap>
+              <bulletin-slide />
+            </boundary-wrap>
+            <!-- 聊天室 -->
+            <chat
+              :playerCtrl="playerCtrl"
+              :channel="channelDetail" />
+            <!-- 文档开关切换 -->
+            <boundary-wrap
+              v-if="documentSwitchVisible"
+              seat="right">
+              <doc-switch />
+            </boundary-wrap>
+            <!-- 打赏 -->
+            <donate
+              v-if="donateGoodEnabled"
+              :channel="channelDetail" />
+            <!-- 商品推送气泡 -->
+            <product-bubble v-if="productEnabled" />
+            <!-- 商品列表 -->
+            <product-list v-if="productEnabled" />
+            <!-- 播放器控制器 -->
+            <player-ui :channel="channelDetail" :playerCtrl="playerCtrl" />
+            <!-- 章节 -->
+            <chapter-list
+              :playerCtrl="playerCtrl"
+              :chapterList="portraitState.chapterList"
+              v-if="chapterVisible" />
+          </swiper-page>
+        </swiper-slide>
 
-      <!-- 空白屏 -->
-      <swiper-slide>
-        <swiper-page />
-      </swiper-slide>
-    </swiper>
+        <!-- 空白屏 -->
+        <swiper-slide>
+          <swiper-page />
+        </swiper-slide>
+      </swiper>
+    </div>
   </div>
 </template>
 
@@ -66,6 +92,9 @@ import Donate from '../components/Donate/Donate';
 import ProductBubble from '../components/ProductBubble/ProductBubble';
 import ProductList from '../components/ProductList/ProductList';
 import PlayerUi from '../components/PlayerUI/PlayerUI';
+import BoundaryWrap from './components/BoundaryWrap';
+import DocSwitch from '../components/DocSwitch/DocSwitch';
+import ChapterList from '../components/ChapterList/ChapterList';
 
 export default {
   name: 'plv-portrait-view',
@@ -92,6 +121,9 @@ export default {
     ProductBubble,
     ProductList,
     PlayerUi,
+    BoundaryWrap,
+    DocSwitch,
+    ChapterList,
   },
 
   methods: {
@@ -117,32 +149,24 @@ export default {
 </script>
 
 <style>
-.test-click {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: red;
-  z-index: 20;
-  touch-action: manipulation;
-}
 .c-portrait-view {
   position: fixed;
+  width: 100%;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Arial,sans-serif;
   line-height: 1;
+  box-sizing: border-box;
+}
+.c-portrait-view__swiper__wrap {
+  height: 100%;
+  position: relative;
+  z-index: 10;
 }
 .c-portrait-view__swiper {
   width: 100%;
   height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
+  overflow: visible;
 }
 .c-portrait-view__bulletin__intro {
   width: 100%;

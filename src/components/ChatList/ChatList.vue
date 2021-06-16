@@ -51,6 +51,7 @@ export default {
   left: 15px;
   bottom: 62px;
   color: #fff;
+  z-index: 20;
 }
 .c-chat-list .c-better-scroll {
   max-height: 150px;
@@ -74,5 +75,8 @@ export default {
   left: 0;
   bottom: 0;
   padding: 0 8px;
+}
+.c-chat-list__content li:last-of-type .c-msg-item {
+  margin-bottom: 0;
 }
 </style>

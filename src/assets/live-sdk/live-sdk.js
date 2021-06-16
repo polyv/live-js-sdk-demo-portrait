@@ -15,7 +15,6 @@ export function loadLiveSdk() {
   if (!loaderPromise) {
     loaderPromise = getScript(sdkUrl).then(() => {
       PolyvLiveSdk = window.PolyvLiveSdk;
-      PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE = 'PRODUCT_MESSAGE';
       return PolyvLiveSdk;
     });
   }
@@ -32,21 +31,6 @@ export async function createLiveSdk() {
     channelId,
     user: config.user,
     ...signData
-  });
-  liveSdk.on(PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, () => {
-    liveSdk.socket.on('message', (msg) => {
-      let data;
-      try {
-        data = JSON.parse(msg);
-      } catch (e) {
-        console.error('Invalid message: ' + e.message);
-      }
-      if (!data) { return; }
-      const { EVENT } = data;
-      if (EVENT === 'PRODUCT_MESSAGE') {
-        liveSdk.trigger(PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE, data);
-      }
-    });
   });
 }
 

@@ -43,3 +43,30 @@
 .i-like {
   background-image: url(./imgs/icon-like.png);
 }
+.i-play {
+  background-image: url(./imgs/icon-play.png);
+}
+.i-pause {
+  background-image: url(./imgs/icon-pause.png);
+}
+.i-send-msg {
+  background-image: url(./imgs/icon-send-msg.png);
+}
+.i-doc-hide {
+  background-image: url(./imgs/icon-doc-hide.png);
+}
+.i-doc-show {
+  background-image: url(./imgs/icon-doc-show.png);
+}
+.i-playback {
+  background-image: url(./imgs/icon-playback.png);
+}
+.i-chapter {
+  background-image: url(./imgs/icon-chapter.png);
+}
+.i-chapter-active {
+  background-image: url(./imgs/icon-chapter-active.png);
+}
+.i-rate {
+  background-image: url(./imgs/icon-rate.png);
+}

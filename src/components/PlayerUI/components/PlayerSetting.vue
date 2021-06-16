@@ -29,6 +29,14 @@
         <i class="c-player-setting__content__item__icon g-icon i-definition"></i>
         <span class="c-player-setting__content__item__text">切换清晰度</span>
       </div>
+      <!-- 倍速设置 -->
+      <div
+        v-if="setRateVisible"
+        class="c-player-setting__content__item"
+        @click="handleClickRate">
+        <i class="c-player-setting__content__item__icon g-icon i-rate"></i>
+        <span class="c-player-setting__content__item__text">切换倍速</span>
+      </div>
     </ul>
 
     <!-- 清晰度选择 -->
@@ -37,22 +45,37 @@
       :active="currentDefinition"
       :list="definitions"
       @change="handleChangeMultirate($event.value)" />
+
+    <!-- 倍数选择 -->
+    <setting-select
+      v-if="settingModel === 'rate' && setRateVisible"
+      :active="currentRate"
+      :list="rateList"
+      class="c-player-setting--rate"
+      @change="handleChangeRate($event.value)" />
   </popper>
 </template>
 
 <script>
 import { PLAYER_SETTING_VISIBLE, bus } from '../../../assets/utils/event-bus';
 import Popper from '../../Popper/Popper';
-import playerCommonMixin from '../../../assets/mixins/player-common';
+import channelBaseMixin from '../../../assets/mixins/channel-base';
 import SettingSelect from './setting-select';
 
 export default {
-  mixins: [playerCommonMixin],
+  mixins: [channelBaseMixin],
 
   data() {
     return {
       visible: false,
       settingModel: 'menu',
+      rateList: [
+        { name: '0.5x', value: 0.5 },
+        { name: '1.0x', value: 1 },
+        { name: '1.25x', value: 1.25 },
+        { name: '1.5x', value: 1.5 },
+        { name: '2.0x', value: 2.0 },
+      ]
     };
   },
 
@@ -86,15 +109,22 @@ export default {
     handleClickMultirate() {
       this.settingModel = 'multirate';
     },
+    handleClickRate() {
+      this.settingModel = 'rate';
+    },
     handleChangeMultirate(definition) {
       if (definition === this.currentDefinition) { return; }
-      this.playerCtrl.changeDefinition(definition);
+      this.getPlayerCtrl().changeDefinition(definition);
     },
     handleChangeMode() {
       const mode = this.playerMode === 'video' ? 'audio' : 'video';
-      this.playerCtrl.setPlayerMode(mode);
+      this.getPlayerCtrl().setPlayerMode(mode);
       this.visible = false;
     },
+    handleChangeRate(rate) {
+      if (rate === this.currentRate) { return; }
+      this.getPlayerCtrl().changeRate(rate);
+    }
   },
 
   mounted() {
@@ -126,5 +156,13 @@ export default {
 .c-player-setting__content__item__text {
   color: #CDCDCD;
   font-size: 12px;
+}
+.c-player-setting--rate {
+  display: flex;
+  justify-content: space-between;
+}
+.c-player-setting--rate .c-setting-select__btn {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>

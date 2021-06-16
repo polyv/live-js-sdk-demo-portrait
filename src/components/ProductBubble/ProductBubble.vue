@@ -1,39 +1,39 @@
 <template>
   <div>
     <transition
-      :name="isGetArrowData ? 'c-product-bubble-anim' : ''"
+      name="c-product-bubble-anim"
       @enter="setCloseTime">
       <div
-        v-show="bubbleVisible"
+        v-if="bubbleVisible"
         class="c-product-bubble-wrap"
         :style="tipsStyle">
         <div
           class="c-product-bubble"
           :class="{
-            'c-product-bubble--visibility': !isGetArrowData
+            'c-product-bubble--finance': goodInfo.productType === 'finance'
           }">
-          <div class="c-product-bubble__img">
+          <div
+            v-if="goodInfo.cover"
+            class="c-product-bubble__img"
+            :class="{
+              'c-product-bubble__img--lg': goodInfo.productType === 'finance'
+            }">
             <img :src="goodInfo.cover" />
             <span>{{ goodInfo.showId }}</span>
           </div>
 
-          <p class="c-product-bubble__name g-singleline">{{ goodInfo.name }}</p>
-
-          <div class="c-product-bubble__bottom">
-            <div
-              class="c-product-bubble__price"
-              :class="{
-                'c-product-bubble__price--free': !goodInfo.realPrice
-              }">{{ goodInfo.realPrice | realPrice }}</div>
-            <div class="c-product-bubble__oldprice g-singleline">{{ goodInfo.price | oldPrice }}</div>
-            <buy-btn :good="goodInfo" />
-          </div>
+          <bubble-finance-info
+            v-if="goodInfo.productType === 'finance'"
+            :goodInfo="goodInfo" />
+          <bubble-normal-info
+            v-else
+            :goodInfo="goodInfo" />
 
           <!-- 关闭 -->
-          <i class="g-icon i-close-gray" @click="close"></i>
-          <!-- 箭头 -->
-          <div class="c-product-bubble__arrow"></div>
+          <i class="i-close-gray g-img-cover" @click="close"></i>
         </div>
+        <!-- 箭头 -->
+        <div class="c-product-bubble__arrow"></div>
       </div>
     </transition>
 
@@ -48,7 +48,8 @@
 <script>
 import { liveSdk, PolyvLiveSdk } from '../../assets/live-sdk/live-sdk';
 import mixin from './mixin';
-import BuyBtn from '../ProductBuyBtn/BubbleBtn';
+import BubbleNormalInfo from './BubbleNormalInfo';
+import BubbleFinanceInfo from './BubbleFinanceInfo';
 
 export default {
   mixins: [mixin],
@@ -62,7 +63,8 @@ export default {
   },
 
   components: {
-    BuyBtn
+    BubbleNormalInfo,
+    BubbleFinanceInfo,
   },
 
   filters: {
@@ -131,23 +133,24 @@ export default {
 .c-product-bubble-wrap {
   width: 12px;
   height: 6px;
+  z-index: 100;
   position: absolute;
   transform-origin: center center;
 }
 
 .c-product-bubble {
   width: 265px;
-  height: 80px;
   border-radius: 10px;
   background: #fff;
   position: absolute;
   bottom: 6px;
   left: -225px;
-  z-index: 10;
+  padding: 12px;
+  display: flex;
+  box-sizing: border-box;
 }
-
-.c-product-bubble--visibility {
-  opacity: 0;
+.c-product-bubble--finance {
+  width: 308px;
 }
 
 .c-product-bubble .i-close-gray {
@@ -169,18 +172,28 @@ export default {
   bottom: -12px;
   right: 28px;
 }
-.c-product-bubble__computed {
-  border-color: transparent !important;
+
+.c-product-bubble__arrow {
+  bottom: -6px;
+  right: 0;
 }
+
+.c-product-bubble__computed {
+  border-color: transparent;
+}
+
 .c-product-bubble__img {
   width: 56px;
   height: 56px;
   border-radius: 10px;
-  position: absolute;
-  top: 50%;
-  margin-top: -28px;
-  left: 12px;
+  margin-right: 8px;
   overflow: hidden;
+  position: relative;
+}
+.c-product-bubble__img--lg {
+  width: 90px;
+  height: 90px;
+  border-radius: 4px;
 }
 .c-product-bubble__img img {
   width: 100%;
@@ -199,40 +212,5 @@ export default {
   text-align: center;
   font-size: 12px;
   border-radius: 0 0 6px 0;
-}
-.c-product-bubble__name {
-  font-size: 14px;
-  color: #333;
-  position: absolute;
-  top: 14px;
-  left: 76px;
-  right: 22px;
-  line-height: 20px;
-  margin: 0;
-  padding: 0;
-}
-.c-product-bubble__bottom {
-  position: absolute;
-  right: 22px;
-  bottom: 12px;
-  left: 76px;
-  display: flex;
-  align-items: center;
-}
-.c-product-bubble__price {
-  color: #FF473A;
-  font-size: 18px;
-  font-weight: bold;
-  margin-right: 4px;
-}
-.c-product-bubble__price.c-product-bubble__price--free {
-  font-size: 16px;
-}
-.c-product-bubble__oldprice {
-  flex: 1;
-  color: #ADADC0;
-  font-size: 12px;
-  text-decoration: line-through;
-  margin-right: 5px;
 }
 </style>

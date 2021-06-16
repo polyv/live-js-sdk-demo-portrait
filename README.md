@@ -45,6 +45,7 @@
     appId: 'APP_ID',
     appSecret: 'APP_SECRET',
     channelId: 'CHANNEI_ID',
+    vid: 'PLAYBACK_VID',
     user: {
       userId: 'USER_ID',
       userName: 'USER_NAME',
@@ -68,6 +69,7 @@ Vue.use(PortraitView, {
   appId: 'APP_ID',
   appSecret: 'APP_SECRET',
   channelId: 'CHANNEI_ID',
+  vid: 'PLAYBACK_VID',
   user: {
     userId: 'USER_ID',
     userName: 'USER_NAME',
@@ -91,6 +93,8 @@ Vue.use(PortraitView, {
 | appId | 保利威后台的 appId | string | 是 |
 | appSecret | 保利威后台的 appSecret | string | 是 |
 | channelId | 频道号 | string | 是 |
+| vid | 回放id | string | 否 |
+| vodType | 回放类型 | string | 否 |
 | user | 用户信息 | Object | 是 |
 | user.userId | 用户id | string | 是 |
 | user.userName | 用户昵称 | string | 是 |
@@ -98,10 +102,6 @@ Vue.use(PortraitView, {
 
 
 ## 补充说明
-
-### 已知问题
-- 目前暂不支持云课堂（三分屏）频道。
-- 目前暂不支持回放。
 
 ### 安全性说明（重要）
 - 实际使用时，请不要将 appSecret 暴露在前端，本 demo 仅为演示。

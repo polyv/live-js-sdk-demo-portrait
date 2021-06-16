@@ -112,6 +112,8 @@ export default {
   font-size: 14px;
   color: #fff;
   background: #FFA611;
+  border: none;
+  outline: none;
 }
 .c-msg-input__btn.c-msg-input__btn--disabled {
   background: #C4C4C4;

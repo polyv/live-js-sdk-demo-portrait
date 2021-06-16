@@ -1,4 +1,4 @@
-import { ONE_PAGE_MSG_COUNT, getListAllCount, handleHistory } from './chat-utils';
+import { ONE_PAGE_MSG_COUNT, getListAllCount, handleHistory, needTypes } from './chat-utils';
 import { msgSource } from '../../assets/chat/constants';
 import chatApi from '../../assets/api/chat';
 
@@ -84,7 +84,7 @@ export default {
 
     // 过滤历史消息，只要图片和文本消息
     filterHistory(historyList) {
-      return historyList.filter(item => item.msgSource === msgSource.chatImg || item.msgSource === msgSource.speak);
+      return historyList.filter(item => needTypes.indexOf(item.msgSource) !== -1);
     },
   }
 };

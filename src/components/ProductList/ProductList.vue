@@ -17,7 +17,7 @@
       @scroll="handleScroll">
       <template v-for="(item, index) in products">
         <product-item
-          :key="index"
+          :key="item.productId"
           :number="total - index"
           :item="item" />
       </template>

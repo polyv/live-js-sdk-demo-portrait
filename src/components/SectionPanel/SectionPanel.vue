@@ -1,3 +1,4 @@
+<!-- 直播介绍与公告卡片公用组件 -->
 <template>
   <div class="c-section-panel">
     <div class="c-section-panel__title">

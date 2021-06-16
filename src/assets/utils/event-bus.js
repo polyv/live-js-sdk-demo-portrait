@@ -22,5 +22,7 @@ export const CHAT_INPUT_VISIBLE = 'CHAT_INPUT_VISIBLE';
 export const UPDATE_PLAYER_STATE = 'UPDATE_PLAYER_STATE';
 // 播放器控制器弹窗显示
 export const PLAYER_SETTING_VISIBLE = 'PLAYER_SETTING_VISIBLE';
+// 章节弹窗显示
+export const CHAPTER_VISIBLE = 'CHAPTER_VISIBLE';
 
 export const bus = new Vue();

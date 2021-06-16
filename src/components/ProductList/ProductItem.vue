@@ -3,29 +3,28 @@
     class="c-product-item"
     :id="item.productId"
     :data-rank="item.rank">
-    <div class="c-product-item__img">
+    <div
+      v-if="item.cover"
+      class="c-product-item__img">
       <img :src="item.cover" />
       <span>{{ number }}</span>
     </div>
-    <div class="c-product-item__name g-multiline">{{ item.name }}</div>
-    <div class="c-product-item__bottom">
-      <span
-        class="c-product-item__price"
-        :class="{
-          'c-product-item__price--free': !item.realPrice
-        }">{{ item.realPrice ? `￥${item.realPrice}` : '免费' }}</span>
-      <span class="c-product-item__oldprice g-singleline">
-        <template v-if="item.price">
-          ￥{{ item.price }}
-        </template>
-      </span>
-      <buy-btn :good="item" />
-    </div>
+
+    <finance-info
+      v-if="item.productType === 'finance'"
+      :item="item"
+      :key="item.features"
+      :number="number" />
+    <normal-info
+      v-else
+      :item="item"
+      :number="number" />
   </div>
 </template>
 
 <script>
-import BuyBtn from '../ProductBuyBtn/ListBtn.vue';
+import FinanceInfo from './FinanceInfo/FinanceInfo.vue';
+import NormalInfo from './NormalInfo/NormalInfo.vue';
 
 export default {
   props: {
@@ -34,28 +33,28 @@ export default {
   },
 
   components: {
-    BuyBtn
+    FinanceInfo,
+    NormalInfo,
   }
 };
 </script>
 
 <style>
 .c-product-item {
-  height: 88px;
+  margin: 0 16px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
   display: flex;
-  flex-direction: column;
-  position: relative;
-  padding-left: 98px;
-  margin: 0 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, .25);
 }
 .c-product-item__img {
-  border-radius: 10px;
-  width: 88px;
-  height: 88px;
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 87px;
+  height: 87px;
   overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 .c-product-item__img img {
   width: 100%;
@@ -70,36 +69,9 @@ export default {
   height: 16px;
   line-height: 16px;
   color: #fff;
-  background: rgba(0, 0, 0, .35);
+  font-size: 12px;
   text-align: center;
-  font-size: 12px;
-  border-radius: 0 0 6px 0;
-}
-.c-product-item__name {
-  font-size: 14px;
-  color: #fff;
-  line-height: 20px;
-}
-.c-product-item__bottom {
-  margin-top: auto;
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-.c-product-item__price {
-  color: #FF473A;
-  font-size: 18px;
-  font-weight: bold;
-}
-.c-product-item__price.c-product-item__price--free {
-  font-size: 16px;
-}
-.c-product-item__oldprice {
-  flex: 1;
-  color: #ADADC0;
-  font-size: 12px;
-  text-decoration: line-through;
-  margin-left: 4px;
-  margin-right: 5px;
+  background: rgba(0, 0, 0, .35);
+  border-radius: 0 0 4px 0;
 }
 </style>

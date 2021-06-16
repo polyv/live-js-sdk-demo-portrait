@@ -40,10 +40,7 @@ export default {
 
 <style>
 .c-like {
-  position: absolute;
-  bottom: 64px;
-  right: 16px;
-  z-index: 10;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,9 +62,6 @@ export default {
   bottom: 23px;
   left: 50%;
   transform: translateX(-50%);
-}
-.c-like--deviation {
-  bottom: 16px;
 }
 .c-like--deviation .c-like__number {
   width: 36px;
