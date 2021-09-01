@@ -1,6 +1,6 @@
 <template>
   <div class="c-playui">
-    <!-- 音频切换、线路切换 -->
+    <!-- 只看主持人、音频切换、线路切换 -->
     <player-setting :channel="channel" :playerCtrl="playerCtrl" />
   </div>
 </template>
