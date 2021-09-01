@@ -80,7 +80,6 @@
               :channel="channel" />
             <!-- 更多 -->
             <div
-              v-if="playerMenuBarVisible"
               class="c-chat__control__btn__inner c-chat__control__btn__inner--more g-icon i-more"
               @click="showPlayerSetting"></div>
           </div>

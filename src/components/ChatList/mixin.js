@@ -2,7 +2,7 @@ import { liveSdk, PolyvLiveSdk } from '../../assets/live-sdk/live-sdk';
 import { config } from '../../assets/utils/config';
 import { escapeHTML } from '@utils/string';
 import { msgSource } from '../../assets/chat/constants';
-import { SELF_SPEAK, bus } from '../../assets/utils/event-bus';
+import { SELF_SPEAK, ONLY_HOST, bus } from '../../assets/utils/event-bus';
 import { SURPLUS_COUNT, filterMaxList } from './chat-utils';
 
 export default {
@@ -16,6 +16,7 @@ export default {
       isNoMore: false,
       isLoading: false,
       waitOtherCount: 0,
+      onlyHost: false,
     };
   },
 
@@ -33,6 +34,25 @@ export default {
         userId,
       };
     },
+
+    onlyHostMsgList() {
+      return this.msgList && this.msgList.filter((msg) => {
+        // 特殊用户消息
+        if (this.isSpecialUserType(msg.user && msg.user.userType)) {
+          return true;
+        }
+        // 个人消息
+        if (msg.user && msg.user.userId === config.user.userId) return true;
+      });
+    },
+
+    filteredMsgList() {
+      if (this.onlyHost) {
+        return this.onlyHostMsgList;
+      } else {
+        return this.msgList;
+      }
+    },
   },
 
   props: {
@@ -48,6 +68,7 @@ export default {
     liveSdk.on(PolyvLiveSdk.EVENTS.REMOVE_HISTORY, this.handleRemoveHistory);
 
     bus.$on(SELF_SPEAK, this.handleSelfSpeak);
+    bus.$on(ONLY_HOST, this.handleOnlyHost);
   },
 
   beforeDestroy() {
@@ -59,6 +80,7 @@ export default {
     liveSdk.off(PolyvLiveSdk.EVENTS.REMOVE_HISTORY, this.handleRemoveHistory);
 
     bus.$off(SELF_SPEAK, this.handleSelfSpeak);
+    bus.$off(ONLY_HOST, this.handleOnlyHost);
     clearInterval(this.queueHandlerTimer);
     clearInterval(this.interceptTimer);
   },
@@ -239,6 +261,22 @@ export default {
         const newQueueList = filterMaxList(this.msgQueue);
         this.msgQueue = newQueueList;
       }
+    },
+
+    // 是否特殊用户类型
+    isSpecialUserType(userType) {
+      const specialUsertype = ['teacher', 'manager', 'guest', 'assistant'];
+
+      if (!userType) return false;
+
+      if (specialUsertype.indexOf(userType) === -1) {
+        return false;
+      }
+      return true;
+    },
+
+    handleOnlyHost(val) {
+      this.onlyHost = val;
     }
   }
 };

@@ -24,5 +24,7 @@ export const UPDATE_PLAYER_STATE = 'UPDATE_PLAYER_STATE';
 export const PLAYER_SETTING_VISIBLE = 'PLAYER_SETTING_VISIBLE';
 // 章节弹窗显示
 export const CHAPTER_VISIBLE = 'CHAPTER_VISIBLE';
+// 切换只看主持人、查看全部
+export const ONLY_HOST = 'ONLY_HOST';
 
 export const bus = new Vue();

@@ -8,6 +8,17 @@
     <ul
       v-if="settingModel === 'menu'"
       class="c-player-setting__content">
+      <!-- 只看主持人/查看全部 -->
+      <div
+        class="c-player-setting__content__item"
+        @click="handleClickOnlyHost">
+        <i
+          :class="[
+            'c-player-setting__content__item__icon',
+            'g-icon',
+            onlyHostIcon]"></i>
+        <span class="c-player-setting__content__item__text">{{ onlyHostText }}</span>
+      </div>
       <!-- 播放模式 -->
       <div
         v-if="setPlayModeVisible"
@@ -57,7 +68,7 @@
 </template>
 
 <script>
-import { PLAYER_SETTING_VISIBLE, bus } from '../../../assets/utils/event-bus';
+import { PLAYER_SETTING_VISIBLE, ONLY_HOST, bus } from '../../../assets/utils/event-bus';
 import Popper from '../../Popper/Popper';
 import channelBaseMixin from '../../../assets/mixins/channel-base';
 import SettingSelect from './setting-select';
@@ -75,7 +86,8 @@ export default {
         { name: '1.25x', value: 1.25 },
         { name: '1.5x', value: 1.5 },
         { name: '2.0x', value: 2.0 },
-      ]
+      ],
+      onlyHost: false
     };
   },
 
@@ -98,7 +110,13 @@ export default {
         icon: this.playerMode === 'video' ? 'i-audio' : 'i-video',
         text: this.playerMode === 'video' ? '音频模式' : '视频模式'
       };
-    }
+    },
+    onlyHostIcon() {
+      return this.onlyHost ? 'i-show-all' : 'i-only-host';
+    },
+    onlyHostText() {
+      return this.onlyHost ? '查看全部' : '只看主持';
+    },
   },
 
   methods: {
@@ -124,6 +142,15 @@ export default {
     handleChangeRate(rate) {
       if (rate === this.currentRate) { return; }
       this.getPlayerCtrl().changeRate(rate);
+    },
+    handleClickOnlyHost() {
+      this.visible = false;
+      if (this.onlyHost) {
+        this.onlyHost = false;
+      } else {
+        this.onlyHost = true;
+      }
+      bus.$emit(ONLY_HOST, this.onlyHost);
     }
   },
 

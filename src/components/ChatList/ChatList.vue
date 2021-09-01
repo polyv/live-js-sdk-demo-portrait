@@ -9,7 +9,7 @@
         <ul
           data-player-click
           class="c-chat-list__content">
-          <template v-for="msg in msgList">
+          <template v-for="msg in filteredMsgList">
             <li
               :key="msg.id"
               :id="msg.id">
