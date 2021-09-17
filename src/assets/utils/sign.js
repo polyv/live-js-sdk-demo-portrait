@@ -60,6 +60,7 @@ export async function getSign(sendData) {
   return {
     appId,
     timestamp,
+    ...sendData,
     sign: getSignStrBySecret(params)
   };
 }

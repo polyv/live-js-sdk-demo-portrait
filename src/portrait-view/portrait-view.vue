@@ -71,6 +71,12 @@
         </swiper-slide>
       </swiper>
     </div>
+    <template>
+      <!-- 抽奖 -->
+      <lottery :pureRtcEnabled="ynToBool(channelDetail.pureRtcEnabled)" />
+      <!-- 签到 -->
+      <check-in />
+    </template>
   </div>
 </template>
 
@@ -95,6 +101,8 @@ import PlayerUi from '../components/PlayerUI/PlayerUI';
 import BoundaryWrap from './components/BoundaryWrap';
 import DocSwitch from '../components/DocSwitch/DocSwitch';
 import ChapterList from '../components/ChapterList/ChapterList';
+import CheckIn from '../components/CheckIn/CheckIn';
+import Lottery from '../components/Lottery/Lottery';
 
 export default {
   name: 'plv-portrait-view',
@@ -124,6 +132,8 @@ export default {
     BoundaryWrap,
     DocSwitch,
     ChapterList,
+    CheckIn,
+    Lottery,
   },
 
   methods: {

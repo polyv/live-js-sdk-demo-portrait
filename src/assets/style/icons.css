@@ -76,3 +76,9 @@
 .i-show-all {
   background-image: url(./imgs/icon-show-all.png);
 }
+.i-back {
+  background-image: url(./imgs/icon-back.png);
+}
+.i-close-mob {
+  background-image: url(./imgs/icon-close-mob.png);
+}
