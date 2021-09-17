@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@polyv/emotion-sdk": "^1.0.3",
+    "@polyv/interactions-receive-sdk": "0.1.0-rc.3",
+    "@polyv/interactions-receive-sdk-scene-default": "0.1.0-rc.4",
     "@polyv/utils": "^1.5.0",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",

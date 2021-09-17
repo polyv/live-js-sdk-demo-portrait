@@ -1,6 +1,9 @@
 import { liveSdk, PolyvLiveSdk } from '../assets/live-sdk/live-sdk';
 import donateApi from '../assets/api/donate';
 import { bus, SWIPER_CHANGE } from '../assets/utils/event-bus';
+import channelApi from '../assets/api/channel';
+import { config } from '../assets/utils/config';
+import { updateConfig } from '@polyv/interactions-receive-sdk';
 
 export default {
   data() {
@@ -51,6 +54,7 @@ export default {
       liveSdk.on(PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
         this.channelDetail = data;
         this.getDonateSetting();
+        this.setUpdateConfig();
       });
       // 监听直播流状态改变事件
       liveSdk.on(PolyvLiveSdk.EVENTS.STREAM_UPDATE, (event, status) => {
@@ -119,6 +123,39 @@ export default {
     // 处理重复登录
     handleRelogin(evt, data) {
       console.info(evt, data);
-    }
+    },
+
+    // 初始化互动功能的参数
+    setUpdateConfig() {
+      updateConfig({
+        socket: liveSdk.socket,
+        userInfo: Object.assign({}, {
+          userId: config.user.userId,
+          pic: config.user.avatar,
+          nick: config.user.userName,
+        }),
+        channelInfo: Object.assign({}, {
+          channelId: config.channelId,
+          sessionId: this.channelDetail.sessionId,
+          roomId: this.channelDetail.roomId || this.channelDetail.channelId,
+        }),
+        getChannelToken: this.getChannelToken,
+      });
+    },
+
+    // 获取当前的token
+    async getChannelToken(cb) {
+      let res;
+      try {
+        res = await channelApi.getChannelToken();
+      } catch (e) {
+        this.$error(`获取token失败:${e}`);
+      }
+      if (res?.data?.token) {
+        const channelToken = res?.data?.token;
+        // eslint-disable-next-line standard/no-callback-literal
+        cb && cb({ channelToken: channelToken });
+      }
+    },
   }
 };
