@@ -137,6 +137,12 @@ export default {
   width: 100%;
   height: 100%;
 }
+.plv-live-warmUp:nth-of-type(n+3) {
+  display: none;
+}
+.plv-live-watermark + .plv-live-panel.plv-live-warmUp {
+  display: block !important;
+}
 .c-player__container--hide {
   opacity: 0;
 }

@@ -3,6 +3,17 @@
     v-if="channelDetail"
     class="c-portrait-view"
     :style="watchStyle">
+    <!-- 问卷 -->
+    <questionnaire />
+    <!-- 答题卡 -->
+    <answer-card />
+    <!-- 答题卡 -->
+    <quick-answer-card />
+    <!-- 关注公众号 -->
+    <promotion-layer
+      :visible="promotionLayerVisible"
+      :data="channelDetail.channelPromotion"
+      @close="promotionLayerVisible = false"/>
     <!-- 播放器 -->
     <player
       :channel="channelDetail"
@@ -16,7 +27,7 @@
           <swiper-page>
             <boundary-wrap v-if="channelInfoSeat === 0">
               <!-- 频道基本信息 -->
-              <channel-info :channel="channelDetail" />
+              <channel-info :channel="channelDetail" @follow="promotionLayerVisible = true" />
             </boundary-wrap>
             <div class="c-portrait-view__bulletin__intro">
               <!-- 公告 -->
@@ -29,12 +40,12 @@
 
         <swiper-slide>
           <swiper-page>
-            <!-- 频道基本信息 -->
-            <channel-info
-              v-if="channelInfoSeat === 1"
-              :channel="channelDetail" />
             <!-- 滑动公告 -->
             <boundary-wrap>
+              <!-- 频道基本信息 -->
+              <channel-info
+                @follow="promotionLayerVisible = true"
+                :channel="channelDetail" />
               <bulletin-slide />
             </boundary-wrap>
             <!-- 聊天室 -->
@@ -95,7 +106,10 @@ import PlayerUi from '../components/PlayerUI/PlayerUI';
 import BoundaryWrap from './components/BoundaryWrap';
 import DocSwitch from '../components/DocSwitch/DocSwitch';
 import ChapterList from '../components/ChapterList/ChapterList';
-
+import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
+import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
+import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
+import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 export default {
   name: 'plv-portrait-view',
 
@@ -103,10 +117,21 @@ export default {
 
   data() {
     return {
-      channelDetail: null
+      promotionLayerVisible: false,
+      channelDetail: null,
+      detailData: {}
     };
   },
-
+  computed: {
+    promotionEnabled() {
+      return this.channelDetail?.channelPromotion && this.ynToBool(this.channelDetail?.channelPromotion?.followEnabled);
+    },
+  },
+  watch: {
+    promotionEnabled(newVal) {
+      this.promotionLayerVisible = newVal && this.ynToBool(this.channelDetail?.channelPromotion?.followAutoShow);
+    }
+  },
   components: {
     Swiper,
     SwiperSlide,
@@ -124,15 +149,19 @@ export default {
     BoundaryWrap,
     DocSwitch,
     ChapterList,
+    Questionnaire,
+    AnswerCard,
+    QuickAnswerCard,
+    PromotionLayer
   },
 
   methods: {
     async initPortrait() {
-      await createLiveSdk();
-      this.initSdkEvent();
+      createLiveSdk().then(() => {
+        this.initSdkEvent();
+      });
     },
   },
-
   mounted() {
     this.initPortrait();
   },
@@ -177,5 +206,14 @@ export default {
   padding: 0 15px;
   overflow-y: auto;
   max-height: 446px;
+}
+.plv-iar-default-btn {
+  background: #FFA611 !important;
+}
+.plv-iar-default-btn:disabled {
+  opacity: 0.6;
+}
+.plv-iar-quick-answer-default__btn {
+  background: #FFA611 !important;
 }
 </style>

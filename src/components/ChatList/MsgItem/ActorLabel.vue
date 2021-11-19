@@ -17,7 +17,6 @@ const actorColor = {
 export default {
   data() {
     return {
-      width: 0
     };
   },
 
@@ -41,7 +40,6 @@ export default {
     },
     labelStyle() {
       return {
-        width: `${this.width}px`,
         background: this.actorColor
       };
     }
@@ -58,17 +56,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .c-actor-label {
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
   margin-right: 4px;
-  border-radius: 6px;
+  border-radius: 9px;
   float: left;
-  height: 12px;
-  line-height: 12px;
+  height: 18px;
+  line-height: 18px;
   position: relative;
-  top: 3px;
   vertical-align: middle;
   display: flex;
   justify-content: center;

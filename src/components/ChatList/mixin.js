@@ -137,7 +137,7 @@ export default {
     handleSpeak(event, msg) {
       if (
         /error|censor/.test(msg.status) ||
-        msg?.user?.userId === config?.user?.userId
+        (msg?.user?.userId === config?.user?.userId && msg?.user?.userType !== 'manager')
       ) return;
 
       msg.msgSource = msgSource.speak;

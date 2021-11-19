@@ -19,7 +19,7 @@ export default {
 
   computed: {
     nick() {
-      return this.msg?.user?.nick || '用户昵称';
+      return this.msg?.user?.nick || this.msg?.nick || '用户昵称';
     },
     actor() {
       return this.msg?.user?.actor;
@@ -35,13 +35,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .c-msg-container {
   clear: left;
   overflow: hidden;
 }
 .c-msg-container__label {
-  font-size: 12px;
+  font-size: 14px;
   color: #fff;
   margin-right: 4px;
   border-radius: 6px;
@@ -62,7 +62,7 @@ export default {
 }
 .c-msg-container__nick {
   color: #FFD16B;
-  font-size: 12px;
+  font-size: 14px;
   float: left;
 }
 </style>

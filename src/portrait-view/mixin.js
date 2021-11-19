@@ -1,6 +1,11 @@
 import { liveSdk, PolyvLiveSdk } from '../assets/live-sdk/live-sdk';
 import donateApi from '../assets/api/donate';
 import { bus, SWIPER_CHANGE } from '../assets/utils/event-bus';
+// 新版互动SDK
+import { updateConfig as updateInteractiveSdkV2Config } from '@polyv/interactions-receive-sdk';
+import channelApi from '../assets/api/channel';
+import axios from '../assets/api/axios';
+import { genSign } from '../assets/utils/string';
 
 export default {
   data() {
@@ -46,11 +51,45 @@ export default {
   },
 
   methods: {
+    async getViewerApiToken(cb) {
+      const { data: detailData } = await channelApi.getChannelDetail();
+      this.detailData = detailData;
+      try {
+        const requestData = {
+          appId: this.appId,
+          timestamp: Date.now(),
+          channelId: detailData.channelId,
+          viewerId: detailData.userId,
+        };
+        requestData.sign = genSign(requestData, this.appSecret);
+        const res = await axios.post('//api.polyv.net/live/v3/channel/watch/get-api-token', requestData);
+        if (res?.data) {
+          const token = res.data.token;
+          /* eslint-disable */
+          cb && cb({ channelToken: token });
+        }
+      } catch (e) {}
+    },
     // 处理sdk初始化完成，监听事件
     initSdkEvent() {
       liveSdk.on(PolyvLiveSdk.EVENTS.CHANNEL_DATA_INIT, (event, data) => {
         this.channelDetail = data;
         this.getDonateSetting();
+        const { channelDetail } = this;
+        updateInteractiveSdkV2Config({
+          getViewerApiToken: this.getViewerApiToken,
+          socket: liveSdk.socket,
+          userInfo: {
+            nick: '',
+            pic: '',
+            userId: channelDetail.userId
+          },
+          channelInfo: {
+            channelId: channelDetail.channelId,
+            roomId: channelDetail.roomId,
+            sessionId: channelDetail.sessionId
+          }
+        });
       });
       // 监听直播流状态改变事件
       liveSdk.on(PolyvLiveSdk.EVENTS.STREAM_UPDATE, (event, status) => {

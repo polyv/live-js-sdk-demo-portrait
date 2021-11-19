@@ -1,18 +1,12 @@
 <template>
-  <msg-container
-    class="c-speak-msg"
-    :msg="msg">
-    <span v-html="parseContent"></span>
-  </msg-container>
+  <span v-html="parseContent"></span>
 </template>
 
 <script>
-import MsgContainer from './MsgContainer';
 import { parseEmotions } from '@polyv/emotion-sdk';
 
 export default {
   components: {
-    MsgContainer
   },
 
   props: {
@@ -22,18 +16,18 @@ export default {
   computed: {
     parseContent() {
       return parseEmotions(this.msg.content, 1);
-    }
+    },
   }
 };
 </script>
 
-<style>
+<style lang="scss">
 .c-speak-msg {
-  font-size: 12px;
-}
-.c-speak-msg .plv-emotion-img {
-  width: 16px !important;
-  height: 16px !important;
-  transform: translateY(-1px);
+  font-size: 14px;
+  .plv-emotion-img {
+    width: 20px;
+    height: 20px;
+    transform: translateY(-1px);
+  }
 }
 </style>

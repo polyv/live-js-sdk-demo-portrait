@@ -1,17 +1,13 @@
 <template>
-  <msg-container :msg="msg">
-    <span class="c-chat-img-msg">
-      <img :src="resizeUrl" @click="previewImg" />
-    </span>
-  </msg-container>
+  <div class="c-chat-img-msg">
+    <img :src="resizeUrl" @click="previewImg" />
+  </div>
 </template>
 
 <script>
-import MsgContainer from './MsgContainer';
 
 export default {
   components: {
-    MsgContainer
   },
 
   props: {
@@ -20,7 +16,8 @@ export default {
 
   computed: {
     imgUrl() {
-      return this.msg.content.uploadImgUrl.replace(/^http(s?):\/\//, '//');
+      const url = this.msg?.content?.uploadImgUrl || this.msg?.image?.url;
+      return url.replace(/^http(s?):\/\//, '//');
     },
     resizeUrl() {
       return this.resizeImg(this.imgUrl, 100, 100);
@@ -35,20 +32,12 @@ export default {
 };
 </script>
 
-<style>
-.c-chat-img-msg {
-  display: inline-block;
-  width: 36px;
-  height: 36px;
-  overflow: hidden;
-  margin-bottom: -2px;
-}
+<style lang="scss">
 .c-chat-img-msg img {
-  width: 36px;
-  height: 36px;
+  width: 68px;
+  height: 68px;
   border-radius: 4px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  object-fit: cover;
+  margin: 4px 0;
+  object-fit: contain;
 }
 </style>
