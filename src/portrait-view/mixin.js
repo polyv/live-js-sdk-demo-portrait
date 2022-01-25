@@ -23,7 +23,9 @@ export default {
         }
       },
       portraitState: {
-        chapterList: [],
+        playbackList: [], // TODO 回放列表
+        chapterList: [], // 章节列表
+        currentPlaying: {}, // 当前播放
         documentSwitch: true, // 文档开关
         documentProportion: 1, // 文档比例尺寸
         onlineUserNumber: 0, // 聊天室在线人数
@@ -93,8 +95,8 @@ export default {
       });
       // 监听直播流状态改变事件
       liveSdk.on(PolyvLiveSdk.EVENTS.STREAM_UPDATE, (event, status) => {
-        if (this.isPlaybacking) { return; }
-        this.channelDetail.watchStatus = status === 'live' ? 'live' : 'end';
+        if (this.isAppointVideo) { return; }
+        this.channelDetail.watchStatus = status;
         this.playerState.liveStatus = this.channelDetail.watchStatus;
         liveSdk.reloadPlayer();
       });

@@ -24,6 +24,7 @@ class PortraitPlayer extends BaseStore {
     return {
       playing: () => this.trigger(PlayEvents.PLAYING),
       pause: () => this.trigger(PlayEvents.PAUSE),
+      ended: () => this.trigger(PlayEvents.ENDED),
       timeupdate: (currentTime) => {
         this.trigger(PlayEvents.TIME_UPDATE, {
           currentTime,
