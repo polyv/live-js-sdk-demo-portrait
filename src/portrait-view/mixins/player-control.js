@@ -10,7 +10,7 @@ import { config } from '../../assets/utils/config';
 const defaultState = {
   liveStatus: '', // 直播状态, live-直播中, end-无直播
   streamType: 'client', // 推流方式
-  playerStatus: 'stoped', // 视频是否正在播放，playing表示正在播放，stoped表示暂停
+  playerStatus: 'stoped', // 视频是否正在播放，playing表示正在播放，stoped表示暂停, ended表示结束
   playerMode: 'video', // 播放器播放模式，video表示视频，audio表示音频
   isPlayed: false, // 是否已播放过视频
   // ----- 清晰度 ----- //

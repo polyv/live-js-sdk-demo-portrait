@@ -4,6 +4,7 @@ export default {
   PLAYER_INITED: 'playerInited', // 播放器初始化完成
   PLAYING: 'playing', // 播放
   PAUSE: 'pause', // 暂停
+  ENDED: 'ended', // 播放结束
   MODE_CHANGE: 'modechange', // 音视频模式切换
   CHANNEL_JSON_DATA: 'channelJsonData', // 播放器json信息获取
   STATUS_CHANGE: 'statusChange', // 流状态改变

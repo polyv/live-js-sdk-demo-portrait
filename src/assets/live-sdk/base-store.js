@@ -8,6 +8,7 @@ const eventObj = {
     bus.$emit(UPDATE_PLAYER_STATE, 'isPlayed', true);
   },
   [PlayEvents.PAUSE]: () => bus.$emit(UPDATE_PLAYER_STATE, 'playerStatus', 'stoped'),
+  [PlayEvents.ENDED]: () => bus.$emit(UPDATE_PLAYER_STATE, 'playerStatus', 'ended'),
   [PlayEvents.PLAY_FAILE]: () => bus.$emit(UPDATE_PLAYER_STATE, 'playerStatus', 'stoped'),
   [PlayEvents.MODE_CHANGE]: ({ mode }) => bus.$emit(UPDATE_PLAYER_STATE, 'playerMode', mode),
   [PlayEvents.LEVEL_CHANGE]: ({ definition }) => bus.$emit(UPDATE_PLAYER_STATE, 'currentDefinition', definition),

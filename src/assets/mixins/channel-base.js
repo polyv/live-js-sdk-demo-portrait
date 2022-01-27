@@ -24,8 +24,12 @@ export default {
       return this.portraitState || this.portrait.portraitState || {};
     },
 
-    documentSwitch() { return this.portraitData.documentSwitch; },
-    documentProportion() { return this.portraitData.documentProportion; },
+    documentSwitch() {
+      return this.portraitData.documentSwitch;
+    },
+    documentProportion() {
+      return this.portraitData.documentProportion;
+    },
 
     channelScene() {
       return this.channelData?.scene;
@@ -121,6 +125,11 @@ export default {
 
     // 是否处于回放中
     isPlaybacking() {
+      return this.isAppointVideo || this.channelData?.watchStatus === 'playback';
+    },
+
+    // 是否指定回放
+    isAppointVideo() {
       return !!this.portrait?.vid || !!this.vid;
     },
 
@@ -278,6 +287,28 @@ export default {
     },
 
     /**
+     * 回放类型
+     * null: 无回放
+     * single: 单个视频回放
+     * list: 列表回放
+     */
+    playbackType() {
+      return this.channelData?.playbackType;
+    },
+
+    /**
+     * 回放列表是否显示
+     * 1. 页面处于回放状态中
+     * 2. 回放类型是列表回放
+     * 3. 当前不是回放地址
+     */
+    playbackListVisible() {
+      const rule1 = this.isPlaybacking;
+      const rule2 = this.playbackType === 'list';
+      return rule1 && rule2;
+    },
+
+    /**
      * 回放下的发送消息按钮是否显示
      * 1. 回放中
      * 2. 聊天未被关闭
@@ -296,7 +327,7 @@ export default {
      */
     chatListStyle() {
       const style = {
-        bottom: '62px',
+        bottom: '62px'
       };
       if (this.isPlaybacking) {
         if (this.progressBarVisible && this.progressBarIsBlock) {

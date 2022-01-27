@@ -40,10 +40,12 @@
 <script>
 import channelBaseMixin from '../../assets/mixins/channel-base';
 import { liveSdk } from '../../assets/live-sdk/live-sdk';
+import PlayEvents from '../../assets/live-sdk/player-evt';
 import NotLive from './not-live';
 import AudioPanel from './audio-panel';
 import VideoComputed from './video-computed';
 import { config } from '../../assets/utils/config';
+import { bus, UPDATE_PLAYER_STATE } from '../../assets/utils/event-bus';
 
 export default {
   mixins: [channelBaseMixin],
@@ -67,14 +69,9 @@ export default {
       if (this.isPPT) {
         playerOptions.pptEl = '#doc-container';
       }
-      if (this.portrait.vid) {
-        playerOptions.type = 'vod';
-        playerOptions.vid = this.portrait.vid;
-        if (config.vodType) {
-          playerOptions.vodType = config.vodType;
-        }
-      }
-      liveSdk.setupPlayer(playerOptions);
+
+      liveSdk.setupPlayer(Object.assign(playerOptions, this.getLivePlaybackOptions()));
+
       this.$emit('player-init');
       // liveSdk.player.on('loadedmetadata', () => {
       //   console.log('initOver');
@@ -86,6 +83,51 @@ export default {
       // window.s2j_onPlayerInitOver = () => {
       //   console.log('initOver2');
       // };
+    },
+
+    /**
+     * 获取回放配置
+     */
+    getLivePlaybackOptions() {
+      let playbackOptions = {};
+
+      // 指定视频播放
+      if (this.isAppointVideo) {
+        playbackOptions.type = 'vod';
+        playbackOptions.vid = this.portrait.vid;
+        if (config.vodType) {
+          playbackOptions.vodType = config.vodType;
+        }
+      } else if (this.channel.recordFileSimpleModel) {
+        // 最新暂存播放
+        const { fileId, m3u8, mp4, originSessionId } = this.channel.recordFileSimpleModel;
+        playbackOptions = {
+          type: 'record',
+          pptType: 'record',
+          fileId: fileId,
+          url: m3u8 || mp4,
+          sessionId: originSessionId
+        };
+      } else if (this.channel.playbackSingleVideo) {
+        // 指定单个回放视频
+        const { videoPoolId } = this.channel.playbackSingleVideo;
+        playbackOptions = {
+          type: 'vod',
+          vid: videoPoolId
+        };
+      }
+      this.portrait.portraitState.currentPlaying = playbackOptions;
+      return playbackOptions;
+    },
+
+    afterPlayOver(key, val) {
+      // const currentPlaying = this.portrait.portraitState.currentPlaying;
+      if (val === PlayEvents.ENDED) {
+        //  单视频回放，重新开始播放
+        const playerCtx = this.getPlayerCtrl();
+        setTimeout(() => playerCtx.seek(0), 1000);
+      }
+      // TODO 回放列表
     }
   },
 
@@ -114,11 +156,24 @@ export default {
           }
         });
       }
+    },
+
+    playerInited: {
+      immediate: true,
+      handler: function(val) {
+        if (val) {
+          bus.$on(UPDATE_PLAYER_STATE, this.afterPlayOver);
+        }
+      }
     }
   },
 
   mounted() {
     this.createPlayer();
+  },
+
+  beforeDestroy() {
+    bus.$off(UPDATE_PLAYER_STATE, this.afterPlayOver);
   }
 };
 </script>
