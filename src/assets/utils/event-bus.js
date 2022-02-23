@@ -26,5 +26,5 @@ export const PLAYER_SETTING_VISIBLE = 'PLAYER_SETTING_VISIBLE';
 export const CHAPTER_VISIBLE = 'CHAPTER_VISIBLE';
 // 切换只看主持人、查看全部
 export const ONLY_HOST = 'ONLY_HOST';
-
+export const UPDATE_DONATE_ANIMATION = 'UPDATE_DONATE_ANIMATION'; // 切换显示隐藏动效
 export const bus = new Vue();

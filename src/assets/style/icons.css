@@ -79,3 +79,9 @@
 .i-show-all {
   background-image: url(./imgs/icon-show-all.png);
 }
+.i-donate-hide {
+  background-image: url(./imgs/icon-donate-hide.png);
+}
+.i-donate-show {
+  background-image: url(./imgs/icon-donate-show.png);
+}

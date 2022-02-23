@@ -19,6 +19,30 @@
             onlyHostIcon]"></i>
         <span class="c-player-setting__content__item__text">{{ onlyHostText }}</span>
       </div>
+      <!-- 显示打赏动效 -->
+      <div
+        v-if="donateEnabled && donateAnimationSwitch"
+        class="c-player-setting__content__item"
+        @click="handleDonateAnimation">
+        <i
+          :class="[
+            'c-player-setting__content__item__icon',
+            'g-icon',
+            'i-donate-show']"></i>
+        <span class="c-player-setting__content__item__text">展示特效</span>
+      </div>
+      <!-- 隐藏打赏动效 -->
+      <div
+        v-if="donateEnabled && !donateAnimationSwitch"
+        class="c-player-setting__content__item"
+        @click="handleDonateAnimation">
+        <i
+          :class="[
+            'c-player-setting__content__item__icon',
+            'g-icon',
+            'i-donate-hide']"></i>
+        <span class="c-player-setting__content__item__text">屏蔽特效</span>
+      </div>
       <!-- 播放模式 -->
       <div
         v-if="setPlayModeVisible"
@@ -87,7 +111,8 @@ export default {
         { name: '1.5x', value: 1.5 },
         { name: '2.0x', value: 2.0 },
       ],
-      onlyHost: false
+      onlyHost: false,
+      donateAnimationSwitch: false, // 默认关闭打赏动效
     };
   },
 
@@ -117,9 +142,37 @@ export default {
     onlyHostText() {
       return this.onlyHost ? '查看全部' : '只看主持';
     },
+    // 现金/道具/积分打赏开启
+    donateEnabled() {
+      const donateSetting = this.channelData?.donateSetting;
+      const donateCashEnabled = this.ynToBool(donateSetting?.donateCashEnabled);
+      const donateGoodEnabled = this.ynToBool(donateSetting?.donateGoodEnabled);
+      // 微信公众号相关功能开启，且现金/道具打赏开启
+      const weixinDonateEnabled =
+        this.ynToBool(this.channelData?.userConfig?.weixinAccountFunctionEnabled || 'Y') &&
+        (donateCashEnabled ||
+        donateGoodEnabled);
+      const donatePointEnabled = this.ynToBool(donateSetting?.donatePointEnabled);
+
+      return (weixinDonateEnabled || donatePointEnabled) && !this.isSeminar;
+    },
+
+    // 打赏特效屏蔽是否显示，道具打赏开启
+    donateAnimationSwitchVisible() {
+      const donateSetting = this.channelData?.donateSetting;
+      const donateGoodEnabled = this.ynToBool(donateSetting.donateGoodEnabled);
+      const donatePointEnabled = this.ynToBool(donateSetting.donatePointEnabled);
+
+      return (donateGoodEnabled || donatePointEnabled);
+    }
   },
 
   methods: {
+    // 屏蔽/展示特效
+    handleDonateAnimation() {
+      this.donateAnimationSwitch = !this.donateAnimationSwitch;
+      bus.$emit('UPDATE_DONATE_ANIMATION', !this.donateAnimationSwitch);
+    },
     handleVisible(visible, { type = 'menu' } = {}) {
       this.settingModel = type;
       this.visible = visible;
