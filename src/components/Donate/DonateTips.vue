@@ -24,7 +24,10 @@
 
 <script>
 import { liveSdk, PolyvLiveSdk } from '../../assets/live-sdk/live-sdk';
-
+import {
+  bus,
+  UPDATE_DONATE_ANIMATION
+} from '../../assets/utils/event-bus';
 export default {
   data() {
     return {
@@ -36,7 +39,23 @@ export default {
       showingRewardTimer: null
     };
   },
-
+  watch: {
+    donateAnimationSwitch(newVal) {
+      if (!newVal) { // 如果屏蔽特效，清空队列，重新初始化队列
+        clearInterval(this.queueTimer);
+        this.queueTimer = null;
+        this.rewardQueue = [];
+        this.handleQueue();
+      } else {
+        if (!this.queueTimer) {
+          this.handleQueue();
+        }
+      }
+    },
+  },
+  created() {
+    bus.$on(UPDATE_DONATE_ANIMATION, this.setDonateAnimation);
+  },
   mounted() {
     liveSdk.on(PolyvLiveSdk.EVENTS.REWARD, this.handleReward);
     this.showingRewardTimer = setInterval(this.handleNewReward, 300);
@@ -44,9 +63,13 @@ export default {
 
   beforeDestroy() {
     liveSdk.off(PolyvLiveSdk.EVENTS.REWARD, this.handleReward);
+    liveSdk.off(UPDATE_DONATE_ANIMATION, this.setDonateAnimation);
   },
 
   methods: {
+    setDonateAnimation(donateAnimationSwitch) {
+      this.donateAnimationSwitch = donateAnimationSwitch;
+    },
     handleReward(event, data) {
       this.rewardQueue.push(data);
     },
