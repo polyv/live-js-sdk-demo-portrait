@@ -58,7 +58,7 @@ export default {
 
   methods: {
     createPlayer() {
-      const playerOptions = {
+      let playerOptions = {
         el: '#player-container',
         type: 'live',
         autoplay: true,
@@ -69,8 +69,11 @@ export default {
       if (this.isPPT) {
         playerOptions.pptEl = '#doc-container';
       }
+      if (this.isPlaybacking) {
+        playerOptions = Object.assign(playerOptions, this.getLivePlaybackOptions());
+      }
 
-      liveSdk.setupPlayer(Object.assign(playerOptions, this.getLivePlaybackOptions()));
+      liveSdk.setupPlayer(playerOptions);
 
       this.$emit('player-init');
       // liveSdk.player.on('loadedmetadata', () => {
@@ -165,13 +168,24 @@ export default {
           bus.$on(UPDATE_PLAYER_STATE, this.afterPlayOver);
         }
       }
+    },
+    liveStatus: {
+      immediate: false,
+      handler: function(status, oldStatus) {
+        if (oldStatus && status) {
+          if (status === 'live') location.reload();
+          const playbackOptions = this.getLivePlaybackOptions();
+          // 判断有回放设置时, 刷新页面
+          if (playbackOptions?.type) {
+            location.reload();
+          }
+        }
+      }
     }
   },
-
   mounted() {
     this.createPlayer();
   },
-
   beforeDestroy() {
     bus.$off(UPDATE_PLAYER_STATE, this.afterPlayOver);
   }

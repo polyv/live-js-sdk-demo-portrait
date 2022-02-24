@@ -95,7 +95,7 @@ export default {
       });
       // 监听直播流状态改变事件
       liveSdk.on(PolyvLiveSdk.EVENTS.STREAM_UPDATE, (event, status) => {
-        if (this.isAppointVideo) { return; }
+        if (this.isAppointVideo) { return; } // vid指定回放下, 不监听流状态
         this.channelDetail.watchStatus = status;
         this.playerState.liveStatus = this.channelDetail.watchStatus;
         liveSdk.reloadPlayer();
