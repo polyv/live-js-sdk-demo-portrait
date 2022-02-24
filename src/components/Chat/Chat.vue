@@ -9,6 +9,8 @@
       <welcome v-if="!isPlaybacking" />
       <!-- 打赏动效 -->
       <donate-tips v-if="!isPlaybacking" />
+      <!-- 打赏动效 -->
+      <donate-animation v-if="donateAnimationSwitch"/>
       <!-- 聊天室 -->
       <chat-list
         :style="chatListStyle"
@@ -100,6 +102,7 @@ import {
   PLAYER_SETTING_VISIBLE,
   CHAT_INPUT_VISIBLE,
   CHAPTER_VISIBLE,
+  UPDATE_DONATE_ANIMATION,
 } from '../../assets/utils/event-bus';
 import channelBaseMixin from '../../assets/mixins/channel-base';
 import InputTips from '../Form/InputTips';
@@ -109,8 +112,14 @@ import ChatList from '../ChatList/ChatList';
 import MsgInput from '../Form/MsgInput';
 import Like from '../Like/Like';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import DonateAnimation from '../DonateAnimation/MobileDonateAnimation.vue';
 
 export default {
+  data() {
+    return {
+      donateAnimationSwitch: true,
+    };
+  },
   mixins: [channelBaseMixin],
 
   components: {
@@ -121,6 +130,7 @@ export default {
     MsgInput,
     Like,
     ProgressBar,
+    DonateAnimation,
   },
 
   props: {
@@ -144,7 +154,16 @@ export default {
     showChapterList() {
       bus.$emit(CHAPTER_VISIBLE, true);
     },
-  }
+    setDonateAnimation(donateAnimationSwitch) {
+      this.donateAnimationSwitch = donateAnimationSwitch;
+    },
+  },
+  created() {
+    bus.$on(UPDATE_DONATE_ANIMATION, this.setDonateAnimation);
+  },
+  beforeDestroy() {
+    bus.off(UPDATE_DONATE_ANIMATION, this.setDonateAnimation);
+  },
 };
 </script>
 
