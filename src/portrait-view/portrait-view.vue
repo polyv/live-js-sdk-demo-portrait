@@ -20,10 +20,12 @@
       @player-init="handlePlayerInit" />
 
     <div class="c-portrait-view__swiper__wrap">
-      <swiper
+      <plv-carousel
         class="c-portrait-view__swiper"
-        :options="swiperOptions">
-        <swiper-slide>
+        :slide-index.sync="slideIndex"
+        @change="handleSwiperChange"
+      >
+        <plv-carousel-item>
           <swiper-page>
             <boundary-wrap v-if="channelInfoSeat === 0">
               <!-- 频道基本信息 -->
@@ -36,9 +38,9 @@
               <intro :channel="channelDetail" />
             </div>
           </swiper-page>
-        </swiper-slide>
+        </plv-carousel-item>
 
-        <swiper-slide>
+        <plv-carousel-item>
           <swiper-page>
             <!-- 滑动公告 -->
             <boundary-wrap>
@@ -74,13 +76,13 @@
               :chapterList="portraitState.chapterList"
               v-if="chapterVisible" />
           </swiper-page>
-        </swiper-slide>
+        </plv-carousel-item>
 
         <!-- 空白屏 -->
-        <swiper-slide>
+        <plv-carousel-item>
           <swiper-page />
-        </swiper-slide>
-      </swiper>
+        </plv-carousel-item>
+      </plv-carousel>
     </div>
   </div>
 </template>
@@ -90,8 +92,6 @@ import mixin from './mixin';
 import playerControlMixin from './mixins/player-control';
 import channelBaseMixin from '../assets/mixins/channel-base';
 import { createLiveSdk, destroyLiveSdk } from '../assets/live-sdk/live-sdk';
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
-import 'swiper/css/swiper.css';
 import Player from '../components/Player/Player';
 import SwiperPage from '../components/SwiperPage/SwiperPage';
 import ChannelInfo from '../components/ChannelInfo/ChannelInfo';
@@ -110,6 +110,12 @@ import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
+
+import PlvCarousel from '@polyv/polyv-ui/lib-front-mob/carousel';
+import PlvCarouselItem from '@polyv/polyv-ui/lib-front-mob/carousel-item';
+import '@polyv/polyv-ui/lib-front-mob/theme/carousel.css';
+import '@polyv/polyv-ui/lib-front-mob/theme/carousel-item.css';
+
 export default {
   name: 'plv-portrait-view',
 
@@ -117,6 +123,7 @@ export default {
 
   data() {
     return {
+      slideIndex: 1,
       promotionLayerVisible: false,
       channelDetail: null,
       detailData: {}
@@ -133,8 +140,8 @@ export default {
     }
   },
   components: {
-    Swiper,
-    SwiperSlide,
+    PlvCarousel,
+    PlvCarouselItem,
     Player,
     SwiperPage,
     ChannelInfo,
