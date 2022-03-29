@@ -1,7 +1,7 @@
 const md5 = require('md5');
 
 // 请输入您的appSecret
-const appSecret = '99f12aa8b6b5475cab45d4cbbf09e432';
+const appSecret = 'YOU APP SECRET';
 
 function resortParam(params) {
   // 除sign外字母顺序排列的key
