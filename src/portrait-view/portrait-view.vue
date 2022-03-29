@@ -111,10 +111,8 @@ import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 
-import PlvCarousel from '@polyv/polyv-ui/lib-front-mob/carousel';
-import PlvCarouselItem from '@polyv/polyv-ui/lib-front-mob/carousel-item';
-import '@polyv/polyv-ui/lib-front-mob/theme/carousel.css';
-import '@polyv/polyv-ui/lib-front-mob/theme/carousel-item.css';
+import PlvCarousel from '../plugins/carousel';
+import PlvCarouselItem from '../plugins/carousel-item';
 
 export default {
   name: 'plv-portrait-view',
