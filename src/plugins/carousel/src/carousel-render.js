@@ -51,6 +51,10 @@ export default {
       type: String,
       default: 'horizontal',
     },
+    touchAngle: {
+      type: Number,
+      default: 45,
+    },
   },
 
   computed: {
@@ -149,6 +153,13 @@ export default {
   },
 
   methods: {
+    isHorizontal() {
+      return this.direction === 'horizontal';
+    },
+    isVertical() {
+      return this.direction === 'vertical';
+    },
+
     setWrapSize() {
       this.wrapWidth = this.$el.clientWidth;
       this.wrapHeight = this.$el.clientHeight;
@@ -254,7 +265,7 @@ export default {
 
       // 开始执行动画
       this.isTransition = true;
-      const moveSpeed = Math.abs(Math.abs(translateEnd) - Math.abs(this.currentTranslate)) / 24;
+      const moveSpeed = Math.abs(Math.abs(translateEnd) - Math.abs(this.currentTranslate)) / 16;
 
       const doAnimation = () => {
         const diff = this.currentTranslate > translateEnd ? -1 * moveSpeed : moveSpeed;
