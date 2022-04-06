@@ -14,6 +14,8 @@ export default {
 
       moveThreshold: 15, // 滑动距离阀值
       timeThreshold: 300, // 滑动时间阀值
+
+      isScrolling: undefined,
     };
   },
 
@@ -59,10 +61,11 @@ export default {
 
     // ============= touch =============
     handleTouchStart(event) {
-      event.preventDefault();
       if (!this.isMobile) {
         return;
       }
+
+      this.isScrolling = undefined;
 
       const touch = event.touches[0];
       this.onDragStart({
@@ -71,19 +74,45 @@ export default {
       });
     },
     handleTouchMove(event) {
-      event.preventDefault();
       if (!this.isMobile) {
         return;
       }
 
       const touch = event.touches[0];
-      this.onDragMove({
+      const position = {
         x: touch.pageX,
         y: touch.pageY,
-      });
+      };
+
+      if (this.preDragPosition) {
+        const { x: preX, y: preY } = this.preDragPosition;
+        const { x: nowX, y: nowY } = position;
+        const diffY = nowY - preY;
+        const diffX = nowX - preX;
+
+        if (typeof this.isScrolling === 'undefined') {
+          if (
+            (this.isHorizontal() && nowY === preY) ||
+            (this.isVertical() && nowX === preX)
+          ) {
+            this.isScrolling = false;
+          } else {
+            const touchAngle = (Math.atan2(Math.abs(diffY), Math.abs(diffX)) * 180) / Math.PI;
+            this.isScrolling = this.isHorizontal() ?
+              touchAngle > this.touchAngle :
+              90 - touchAngle > this.touchAngle;
+          }
+        }
+
+        if (this.isScrolling) {
+          return;
+        }
+      }
+
+      event.preventDefault();
+      this.onDragMove(position);
     },
     hadnleTouchEnd(event) {
-      event.preventDefault();
       if (!this.isMobile) {
         return;
       }
@@ -113,11 +142,12 @@ export default {
       if (this.preDragPosition) {
         const { x: preX, y: preY } = this.preDragPosition;
         const { x: nowX, y: nowY } = position;
+        const diffY = nowY - preY;
+        const diffX = nowX - preX;
+
         if (this.direction === 'vertical') {
-          const diffY = nowY - preY;
           this.translateY += diffY;
         } else {
-          const diffX = nowX - preX;
           this.translateX += diffX;
         }
       }
