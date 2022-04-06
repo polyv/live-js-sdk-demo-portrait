@@ -11,17 +11,6 @@ export default {
   data() {
     return {
       clientHeight: document.documentElement.clientHeight,
-      // 轮播组件配置
-      swiperOptions: {
-        autoplay: false,
-        loop: false,
-        initialSlide: 1,
-        on: {
-          slideChange: () => {
-            this.handleSwiperChange();
-          }
-        }
-      },
       portraitState: {
         playbackList: [], // TODO 回放列表
         chapterList: [], // 章节列表
