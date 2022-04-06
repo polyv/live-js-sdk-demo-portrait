@@ -3,6 +3,16 @@ import { setAnimationClocker, removeAnimationClocker } from './utils/utils';
 import SlotRender from './utils/slot-render';
 import './carousel.css';
 
+// 计算三阶贝塞尔曲线
+function computeThreeOrderBezier(t, p1, cp1, cp2, p2) {
+  const x =
+    p1 * (1 - t) * (1 - t) * (1 - t) +
+    3 * cp1 * t * (1 - t) * (1 - t) +
+    3 * cp2 * t * t * (1 - t) +
+    p2 * t * t * t;
+  return x;
+}
+
 export default {
   name: 'plv-carousel',
 
@@ -265,14 +275,38 @@ export default {
 
       // 开始执行动画
       this.isTransition = true;
-      const moveSpeed = Math.abs(Math.abs(translateEnd) - Math.abs(this.currentTranslate)) / 16;
+      // 总运动时间
+      const moveTime = 300;
+      // 开始运动的时间戳
+      const startTimestamp = Date.now();
+      // 开始运动的位置
+      const translateStart = this.currentTranslate;
+      // 贝塞尔运动总路程
+      const translateMove = Math.abs(translateEnd - translateStart);
 
       const doAnimation = () => {
-        const diff = this.currentTranslate > translateEnd ? -1 * moveSpeed : moveSpeed;
-        let _translate = this.currentTranslate + diff;
+        const base = this.currentTranslate > translateEnd ? -1 : 1;
+        const diffTime = Date.now() - startTimestamp;
+        const t = diffTime / moveTime;
 
-        if (Math.abs(_translate - translateEnd) < moveSpeed) {
-          _translate = translateEnd;
+        // 通过贝塞尔曲线计算出当前进度所占总路程的比值
+        const beziers = [0, 0.78, 0.88, 0.98];
+        const percent = computeThreeOrderBezier(t, ...beziers);
+        const _s = percent * translateMove;
+
+        let _translate = translateStart + (_s * base);
+
+        switch (base) {
+          case 1:
+            if (_translate >= translateEnd) {
+              _translate = translateEnd;
+            }
+            break;
+          case -1:
+            if (_translate <= translateEnd) {
+              _translate = translateEnd;
+            }
+            break;
         }
 
         this.setTranslate(_translate);
