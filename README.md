@@ -108,8 +108,8 @@ Vue.use(PortraitView, {
 
 ## 其他文档
 您还可以结合 POLYV 官方文档查阅 demo 源码：
-- [直播 JavaScript SDK 使用文档](https://dev.polyv.net/2019/liveproduct/l-sdk/web-sdk/)
-- [直播API签名规则](https://dev.polyv.net/2018/liveproduct/l-api/notice/sign/)
+- [直播 JavaScript SDK 使用文档](https://help.polyv.net/index.html#/live/js/live_js_sdk/live_js_sdk)
+- [直播API签名规则](https://help.polyv.net/index.html#/live/api/buildSign)
 
 ### DEMO 使用到的第三方库
 - 参考项目中的 package.json 的 dependencies。
