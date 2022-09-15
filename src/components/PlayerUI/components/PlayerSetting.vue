@@ -145,14 +145,14 @@ export default {
     // 现金/道具/积分打赏开启
     donateEnabled() {
       const donateSetting = this.channelData?.donateSetting;
-      const donateCashEnabled = this.ynToBool(donateSetting?.donateCashEnabled);
-      const donateGoodEnabled = this.ynToBool(donateSetting?.donateGoodEnabled);
+      const donateCashEnabled = this.ynToBool(donateSetting?.donateCashEnabled || 'N');
+      const donateGoodEnabled = this.ynToBool(donateSetting?.donateGoodEnabled || 'N');
       // 微信公众号相关功能开启，且现金/道具打赏开启
       const weixinDonateEnabled =
         this.ynToBool(this.channelData?.userConfig?.weixinAccountFunctionEnabled || 'Y') &&
         (donateCashEnabled ||
         donateGoodEnabled);
-      const donatePointEnabled = this.ynToBool(donateSetting?.donatePointEnabled);
+      const donatePointEnabled = this.ynToBool(donateSetting?.donatePointEnabled || 'N');
 
       return (weixinDonateEnabled || donatePointEnabled) && !this.isSeminar;
     },
