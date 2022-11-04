@@ -3,6 +3,7 @@ import { imgSizeComputed, videoSizeComputed, pptVideoSizeComputed } from '../uti
 import BaseStore from './base-store';
 import PlayEvents from './player-evt';
 import { setStyle } from '../utils/dom';
+import { webviewStore } from '../store/webview';
 
 class PortraitPlayer extends BaseStore {
   constructor(options = {}) {
@@ -12,6 +13,8 @@ class PortraitPlayer extends BaseStore {
     this.streamType = options.streamType;
     this.resolutionWidth = options.resolutionWidth;
     this.resolutionHeight = options.resolutionHeight;
+    // const ResolutionRate = this.resolutionWidth / this.resolutionHeight;
+    // console.log(ResolutionRate);
     this.videoSizeTimer = null;
     this.setVideoSize();
     this.setImgSize(this.warmupImgSelector);
@@ -98,7 +101,17 @@ class PortraitPlayer extends BaseStore {
    */
   setImgSize(selector) {
     const screenData = this.screenData;
-    const size = imgSizeComputed(screenData);
+    let size = imgSizeComputed(screenData);
+    const isSmallWindow = webviewStore.isSmallWindow;
+    if (isSmallWindow) {
+      // webview 小窗尺寸
+      size = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        left: 0,
+        top: 0,
+      };
+    }
     const imgDom = document.querySelector(selector);
     if (!size || !imgDom) return;
     setStyle(imgDom, 'position', 'absolute');
@@ -116,7 +129,16 @@ class PortraitPlayer extends BaseStore {
       vh: this.resolutionHeight
     };
     let size = null;
-    if (this?.portrait?.isPPT && this?.portrait?.portraitState?.documentSwitch) {
+    const isSmallWindow = webviewStore.isSmallWindow;
+    if (isSmallWindow) {
+      // webview 小窗尺寸
+      size = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        left: 0,
+        top: 0,
+      };
+    } else if (this?.portrait?.isPPT && this?.portrait?.portraitState?.documentSwitch) {
       size = pptVideoSizeComputed(screenData, videoData);
     } else {
       size = videoSizeComputed(screenData, videoData);

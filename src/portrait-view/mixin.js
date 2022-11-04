@@ -42,6 +42,11 @@ export default {
 
   computed: {
     watchStyle() {
+      if (this.isSmallWindow) {
+        return {
+          height: '100%',
+        };
+      }
       const style = {
         height: `${this.clientHeight}px`
       };
