@@ -55,8 +55,8 @@ export default {
           mobileAppLink
         };
         const webviewData = {
-          width: 160,
-          height: 90,
+          width: webviewStore.isPortrait ? 90 : 160,
+          height: webviewStore.isPortrait ? 160 : 90,
           newPage: true,
           link: this.btnLink,
           data

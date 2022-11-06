@@ -13,8 +13,9 @@ class PortraitPlayer extends BaseStore {
     this.streamType = options.streamType;
     this.resolutionWidth = options.resolutionWidth;
     this.resolutionHeight = options.resolutionHeight;
-    // const ResolutionRate = this.resolutionWidth / this.resolutionHeight;
-    // console.log(ResolutionRate);
+    // 保存视频流的宽高比
+    const ResolutionRate = this.resolutionWidth / this.resolutionHeight;
+    webviewStore.isPortrait = ResolutionRate < 1;
     this.videoSizeTimer = null;
     this.setVideoSize();
     this.setImgSize(this.warmupImgSelector);
