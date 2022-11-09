@@ -156,7 +156,7 @@ export default {
   computed: {
     playerWrapStyle() {
       const style = {};
-      if (this.documentVisible) {
+      if (this.documentVisible && !this.isSmallWindow) {
         style.paddingTop = `${this.docWrapHeight}px`;
       }
       return style;

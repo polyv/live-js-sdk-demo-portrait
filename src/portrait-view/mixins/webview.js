@@ -28,12 +28,14 @@ export default {
       // 监听切换正常窗口事件
       webviewBridge && webviewBridge.on('changeToNormal', handleChangeToNormal);
     },
+
     // 销毁事件
     handleRemoveWebViewEvent() {
       const { webviewBridge, handleChangeToSmall, handleChangeToNormal } = this;
       webviewBridge && webviewBridge.off('changeToSmall', handleChangeToSmall);
       webviewBridge && webviewBridge.off('changeToNormal', handleChangeToNormal);
     },
+
     // 监听到小窗口模式
     handleChangeToSmall(data = {}) {
       this.isSmallWindow = true;
@@ -42,6 +44,7 @@ export default {
         this.playerCtrl && this.playerCtrl.pause();
       }
     },
+
     // 监听到正常窗口模式
     handleChangeToNormal(data = {}) {
       this.isSmallWindow = false;
@@ -50,39 +53,34 @@ export default {
         this.playerCtrl && this.playerCtrl.resume();
       }
     },
+
     handleResize() {
       setTimeout(() => {
+        // 更新 swiper 宽高变化
         this.$refs.swiper && this.$refs.swiper.$swiper.update(true);
       }, 200);
     },
-    // 处理发生跳转的情况
-    async handleBeforeUnload() {
-      if (this.isSmallWindow) {
-        await this.waitForRecover();
-      }
-    },
+
+    // IOS 系统级小窗需要下列信息
     sendInitInfo() {
+      const { channelId, userId } = this.channelDetail;
+      const { watchInfo } = this.channelDetail;
       this.webviewBridge && this.webviewBridge.sendData('getLiveUserInfo', {
-        userId: '1ac7bd0157',
-        channelId: 3450250,
+        userId,
+        channelId,
         customParam: {
-          liveParam1: 'guest', // 用户id,
-          liveParam2: 'guest',
-          liveParam3: '',
-          liveParam4: '',
-          liveParam5: '',
+          liveParam1: watchInfo?.viewerInfo?.viewerId || 'guest', // 用户id,
+          liveParam2: watchInfo?.viewerInfo?.nickname || 'guest',
+          liveParam3: watchInfo?.viewerInfo?.param3 || '',
+          liveParam4: watchInfo?.viewerInfo?.param4 || '',
+          liveParam5: watchInfo?.viewerInfo?.param5 || '',
         }
       });
     },
 
-    // 从小窗恢复常规样式
+    // 从小窗恢复常规窗口
     waitForRecover() {
       this.webviewBridge && this.webviewBridge.sendData('changeToNormal');
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 200);
-      });
     },
   },
   async mounted() {
@@ -92,7 +90,6 @@ export default {
       this.handleInitBindWebViewEvent();
       this.sendInitInfo();
       window.addEventListener('resize', this.handleResize);
-      window.addEventListener('beforeunload', this.handleBeforeUnload);
       this.$once('hook:beforeDestroy', () => {
         this.handleRemoveWebViewEvent();
         window.removeEventListener('resize', this.handleResize);
