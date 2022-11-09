@@ -17,6 +17,11 @@ export default {
         this.playerCtrl && this.playerCtrl.setVideoSize();
         this.playerCtrl && this.playerCtrl.setImgSize('.c-player__container .plv-cover-box');
       }, 200);
+    },
+    channelDetail(newValue) {
+      if (newValue) {
+        this.handleInitWebViewInfo();
+      }
     }
   },
   methods: {
@@ -58,11 +63,13 @@ export default {
       setTimeout(() => {
         // 更新 swiper 宽高变化
         this.$refs.swiper && this.$refs.swiper.$swiper.update(true);
+        console.info(this.$refs.swiper);
       }, 200);
     },
 
     // IOS 系统级小窗需要下列信息
     sendInitInfo() {
+      console.log(this.channelDetail);
       const { channelId, userId } = this.channelDetail;
       const { watchInfo } = this.channelDetail;
       this.webviewBridge && this.webviewBridge.sendData('getLiveUserInfo', {
@@ -82,18 +89,19 @@ export default {
     waitForRecover() {
       this.webviewBridge && this.webviewBridge.sendData('changeToNormal');
     },
-  },
-  async mounted() {
-    // 是否为 plvwebviewapp 环境
-    if (isWebView()) {
-      await initWebView();
-      this.handleInitBindWebViewEvent();
-      this.sendInitInfo();
-      window.addEventListener('resize', this.handleResize);
-      this.$once('hook:beforeDestroy', () => {
-        this.handleRemoveWebViewEvent();
-        window.removeEventListener('resize', this.handleResize);
-      });
+
+    async handleInitWebViewInfo() {
+      // 是否为 plvwebviewapp 环境
+      if (isWebView()) {
+        await initWebView();
+        this.handleInitBindWebViewEvent();
+        this.sendInitInfo();
+        window.addEventListener('resize', this.handleResize);
+        this.$once('hook:beforeDestroy', () => {
+          this.handleRemoveWebViewEvent();
+          window.removeEventListener('resize', this.handleResize);
+        });
+      }
     }
-  }
+  },
 };
