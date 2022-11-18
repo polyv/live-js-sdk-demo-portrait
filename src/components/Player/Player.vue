@@ -65,6 +65,7 @@ export default {
   },
   props: {
     isSmallWindow: Boolean,
+    clientWidth: Number
   },
 
   methods: {

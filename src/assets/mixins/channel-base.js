@@ -67,7 +67,7 @@ export default {
      * 文档容器高度
      */
     docWrapHeight() {
-      const clientWidth = document.documentElement.clientWidth;
+      const clientWidth = this.clientWidth;
       // 最小高度为9:16
       const minHeight = clientWidth * (9 / 16);
       // 最大高度为3:4

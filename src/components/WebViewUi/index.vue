@@ -26,6 +26,7 @@ export default {
     },
     // 关闭小窗
     handleWebviewClose() {
+      localStorage.clear();
       this.webviewBridge && this.webviewBridge.sendData('closeWindow');
     },
   }

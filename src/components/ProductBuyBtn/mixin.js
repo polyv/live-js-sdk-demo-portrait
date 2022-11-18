@@ -62,6 +62,8 @@ export default {
           data
         };
         this.webviewBridge.sendData('clickProduct', webviewData);
+        // 记录小窗页面刷新后的状态
+        localStorage.setItem('isSmallWindow', 'true');
         webviewStore.isSmallWindow = true;
       }
     }

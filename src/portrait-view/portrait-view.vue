@@ -19,6 +19,7 @@
     <player
       :channel="channelDetail"
       :is-small-window="isSmallWindow"
+      :client-width="clientWidth"
       @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
 
@@ -32,7 +33,7 @@
           <swiper-page>
             <boundary-wrap v-if="channelInfoSeat === 0">
               <!-- 频道基本信息 -->
-              <channel-info :channel="channelDetail" @follow="promotionLayerVisible = true" />
+              <channel-info v-show="!isSmallWindow" :channel="channelDetail" @follow="promotionLayerVisible = true" />
             </boundary-wrap>
             <div class="c-portrait-view__bulletin__intro">
               <!-- 公告 -->
@@ -55,6 +56,7 @@
             </boundary-wrap>
             <!-- 聊天室 -->
             <chat
+              v-show="!isSmallWindow"
               :playerCtrl="playerCtrl"
               :channel="channelDetail" />
             <!-- 文档开关切换 -->

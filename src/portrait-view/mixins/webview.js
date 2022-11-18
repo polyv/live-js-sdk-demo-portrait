@@ -52,6 +52,7 @@ export default {
 
     // 监听到正常窗口模式
     handleChangeToNormal(data = {}) {
+      localStorage.removeItem('isSmallWindow');
       this.isSmallWindow = false;
       if (data?.isPIP) {
         // IOS下，需恢复web播放
@@ -69,7 +70,6 @@ export default {
 
     // IOS 系统级小窗需要下列信息
     sendInitInfo() {
-      console.log(this.channelDetail);
       const { channelId, userId } = this.channelDetail;
       const { watchInfo } = this.channelDetail;
       this.webviewBridge && this.webviewBridge.sendData('getLiveUserInfo', {
