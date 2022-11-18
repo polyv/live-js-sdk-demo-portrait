@@ -187,6 +187,13 @@ export default {
 </script>
 
 <style>
+/* 避免小窗口下 网速慢时出现白屏 */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url('../components/Player/imgs/player-bg.png');
+}
 .c-portrait-view {
   position: fixed;
   width: 100%;

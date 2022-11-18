@@ -171,6 +171,7 @@ export default {
   },
 
   mounted() {
+    // 监听小窗口变化 改变文档等高度大小
     window.addEventListener('resize', debounce(() => {
       this.clientHeight = document.documentElement.clientHeight;
       this.clientWidth = document.documentElement.clientWidth;

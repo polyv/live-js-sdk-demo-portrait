@@ -26,6 +26,7 @@ export default {
     },
     // 关闭小窗
     handleWebviewClose() {
+      // 清除小窗口先缓存好的参数
       localStorage.clear();
       this.webviewBridge && this.webviewBridge.sendData('closeWindow');
     },

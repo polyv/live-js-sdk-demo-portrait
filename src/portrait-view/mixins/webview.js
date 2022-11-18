@@ -52,6 +52,7 @@ export default {
 
     // 监听到正常窗口模式
     handleChangeToNormal(data = {}) {
+      // 正常模式下刷新不需要缓存 isSmallWindow ，所以删除
       localStorage.removeItem('isSmallWindow');
       this.isSmallWindow = false;
       if (data?.isPIP) {
