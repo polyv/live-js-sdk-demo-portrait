@@ -29,11 +29,17 @@
       :playerStatus="playerStatus" />
     <!-- 播放按钮 -->
     <img
-      v-if="playerButtonVisible"
+      v-if="playerButtonVisible && !isSmallWindow"
       class="c-player__button"
       src="./imgs/button-play.png" />
     <!-- 视频区域计算 -->
     <video-computed />
+    <!-- 小窗口UI -->
+    <web-view-ui
+      v-show="isSmallWindow"
+      :player-button-visible="playerButtonVisible"
+      @clickMain="playerClick"
+    />
   </div>
 </template>
 
@@ -45,7 +51,8 @@ import NotLive from './not-live';
 import AudioPanel from './audio-panel';
 import VideoComputed from './video-computed';
 import { config } from '../../assets/utils/config';
-import { bus, UPDATE_PLAYER_STATE } from '../../assets/utils/event-bus';
+import { bus, UPDATE_PLAYER_STATE, PLAYER_CLICK } from '../../assets/utils/event-bus';
+import { webviewStore } from '../../assets/store/webview';
 
 export default {
   mixins: [channelBaseMixin],
@@ -53,7 +60,12 @@ export default {
   components: {
     NotLive,
     AudioPanel,
-    VideoComputed
+    VideoComputed,
+    WebViewUi: () => import('../../components/WebViewUi')
+  },
+  props: {
+    isSmallWindow: Boolean,
+    clientWidth: Number
   },
 
   methods: {
@@ -131,13 +143,21 @@ export default {
         setTimeout(() => playerCtx.seek(0), 1000);
       }
       // TODO 回放列表
-    }
+    },
+    playerClick(e) {
+      if (this.isSmallWindow && !this.playerButtonVisible) {
+        // 点击 webview 小窗，播放中，恢复全屏
+        webviewStore.isSmallWindow = false;
+        this.$emit('handleChangeToNormal');
+      }
+      bus.$emit(PLAYER_CLICK, e);
+    },
   },
 
   computed: {
     playerWrapStyle() {
       const style = {};
-      if (this.documentVisible) {
+      if (this.documentVisible && !this.isSmallWindow) {
         style.paddingTop = `${this.docWrapHeight}px`;
       }
       return style;

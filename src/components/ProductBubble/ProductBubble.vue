@@ -99,15 +99,24 @@ export default {
       };
       this.tipsStyle = style;
       this.$nextTick(() => {
-        this.handleProductMsg(data);
+        if (data) {
+          this.handleProductMsg(data);
+        }
       });
     },
+
+    handlePageResize() {
+      setTimeout(() => {
+        this.setTipsStyle();
+      }, 300);
+    }
   },
 
   mounted() {
     this.$nextTick(() => {
       this.getArrowData();
       liveSdk.on(PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE, this.setTipsStyle);
+      window.addEventListener('resize', this.handlePageResize);
     });
   },
 

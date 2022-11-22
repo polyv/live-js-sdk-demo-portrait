@@ -1,7 +1,12 @@
 import { escapeHTML } from '@utils/string';
+import { isWebView } from '@polyv/web-view-bridge';
 import { isWeixin, isMobile, getWeixinVersion, compareVersions } from '../../assets/utils/browser';
+import webviewBase from '../../components/WebViewUi/mixins/webviewBase';
+import { webviewStore } from '../../assets/store/webview';
 
 export default {
+  mixins: [webviewBase],
+
   data() {
     return {
       isMobile: isMobile(),
@@ -37,6 +42,30 @@ export default {
           </script>
         </wx-open-launch-weapp>
       `;
+    },
+    // 去购买
+    handleBuy(event) {
+      if (isWebView()) {
+        event.preventDefault();
+        const { mobileLink, wxMiniprogramOriginalId, wxMiniprogramLink, mobileAppLink } = this.good;
+        const data = {
+          mobileLink,
+          wxMiniprogramOriginalId,
+          wxMiniprogramLink,
+          mobileAppLink
+        };
+        const webviewData = {
+          width: webviewStore.isPortrait ? 90 : 160,
+          height: webviewStore.isPortrait ? 160 : 90,
+          newPage: true,
+          link: this.btnLink,
+          data
+        };
+        this.webviewBridge.sendData('clickProduct', webviewData);
+        // 记录小窗页面刷新后的状态
+        localStorage.setItem('isSmallWindow', 'true');
+        webviewStore.isSmallWindow = true;
+      }
     }
   },
 

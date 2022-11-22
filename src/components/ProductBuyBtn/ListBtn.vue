@@ -18,7 +18,8 @@
       rel="noopener"
       target="_blank"
       class="c-product-list-btn__inner"
-      :href="btnLink">
+      :href="btnLink"
+      @click="handleBuy">
       <p class="c-product-list-btn__inner__text">{{ text }}</p>
     </a>
   </div>

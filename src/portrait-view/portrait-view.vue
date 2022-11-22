@@ -4,30 +4,36 @@
     class="c-portrait-view"
     :style="watchStyle">
     <!-- 问卷 -->
-    <questionnaire />
+    <questionnaire v-show="!isSmallWindow" />
     <!-- 答题卡 -->
-    <answer-card />
+    <answer-card v-show="!isSmallWindow" />
     <!-- 答题卡 -->
-    <quick-answer-card />
+    <quick-answer-card v-show="!isSmallWindow" />
     <!-- 关注公众号 -->
     <promotion-layer
+      v-show="!isSmallWindow"
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
       @close="promotionLayerVisible = false"/>
     <!-- 播放器 -->
     <player
       :channel="channelDetail"
+      :is-small-window="isSmallWindow"
+      :client-width="clientWidth"
+      @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
+        ref="swiper"
         class="c-portrait-view__swiper"
+        :class="[isSmallWindow ? 'swiper-no-swiping' : '']"
         :options="swiperOptions">
         <swiper-slide>
           <swiper-page>
             <boundary-wrap v-if="channelInfoSeat === 0">
               <!-- 频道基本信息 -->
-              <channel-info :channel="channelDetail" @follow="promotionLayerVisible = true" />
+              <channel-info v-show="!isSmallWindow" :channel="channelDetail" @follow="promotionLayerVisible = true" />
             </boundary-wrap>
             <div class="c-portrait-view__bulletin__intro">
               <!-- 公告 -->
@@ -41,7 +47,7 @@
         <swiper-slide>
           <swiper-page>
             <!-- 滑动公告 -->
-            <boundary-wrap>
+            <boundary-wrap v-show="!isSmallWindow">
               <!-- 频道基本信息 -->
               <channel-info
                 @follow="promotionLayerVisible = true"
@@ -50,6 +56,7 @@
             </boundary-wrap>
             <!-- 聊天室 -->
             <chat
+              v-show="!isSmallWindow"
               :playerCtrl="playerCtrl"
               :channel="channelDetail" />
             <!-- 文档开关切换 -->
@@ -89,6 +96,7 @@
 import mixin from './mixin';
 import playerControlMixin from './mixins/player-control';
 import channelBaseMixin from '../assets/mixins/channel-base';
+import WebViewMixin from './mixins/webview';
 import { createLiveSdk, destroyLiveSdk } from '../assets/live-sdk/live-sdk';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
@@ -110,10 +118,11 @@ import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
+
 export default {
   name: 'plv-portrait-view',
 
-  mixins: [channelBaseMixin, mixin, playerControlMixin],
+  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin],
 
   data() {
     return {
@@ -152,7 +161,7 @@ export default {
     Questionnaire,
     AnswerCard,
     QuickAnswerCard,
-    PromotionLayer
+    PromotionLayer,
   },
 
   methods: {
@@ -178,6 +187,13 @@ export default {
 </script>
 
 <style>
+/* 避免小窗口下 网速慢时出现白屏 */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: url('../components/Player/imgs/player-bg.png');
+}
 .c-portrait-view {
   position: fixed;
   width: 100%;
@@ -215,5 +231,8 @@ export default {
 }
 .plv-iar-quick-answer-default__btn {
   background: #FFA611 !important;
+}
+.p-watch--small-window .c-player {
+  z-index: 10001;
 }
 </style>

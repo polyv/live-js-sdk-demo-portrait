@@ -6,11 +6,13 @@ import { updateConfig as updateInteractiveSdkV2Config } from '@polyv/interaction
 import channelApi from '../assets/api/channel';
 import axios from '../assets/api/axios';
 import { genSign } from '../assets/utils/string';
+import debounce from 'lodash-es/debounce';
 
 export default {
   data() {
     return {
       clientHeight: document.documentElement.clientHeight,
+      clientWidth: document.documentElement.clientWidth,
       // 轮播组件配置
       swiperOptions: {
         autoplay: false,
@@ -42,6 +44,11 @@ export default {
 
   computed: {
     watchStyle() {
+      if (this.isSmallWindow) {
+        return {
+          height: '100%',
+        };
+      }
       const style = {
         height: `${this.clientHeight}px`
       };
@@ -161,5 +168,13 @@ export default {
     handleRelogin(evt, data) {
       console.info(evt, data);
     }
+  },
+
+  mounted() {
+    // 监听小窗口变化 改变文档等高度大小
+    window.addEventListener('resize', debounce(() => {
+      this.clientHeight = document.documentElement.clientHeight;
+      this.clientWidth = document.documentElement.clientWidth;
+    }, 60, { leading: true }));
   }
 };

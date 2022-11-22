@@ -12,7 +12,9 @@
       rel="noopener"
       target="_blank"
       class="c-product-bubble-btn__inner"
-      :href="btnLink"></a>
+      :href="btnLink"
+      @click="handleBuy"
+    ></a>
   </div>
 </template>
 
