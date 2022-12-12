@@ -17,7 +17,9 @@ export const config = {
   // 播放回放类型
   vodType: '',
   // 默认头像
-  defaultAvatar: '//livestatic.videocc.net/assets/wimages/missing_face.png'
+  defaultAvatar: '//livestatic.videocc.net/assets/wimages/missing_face.png',
+  param4: '', // 统计参数param4
+  param5: '', // 统计参数param5
 };
 
 export const updateConfig = (key, value) => {
