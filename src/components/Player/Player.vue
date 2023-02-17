@@ -49,6 +49,7 @@ import { liveSdk } from '../../assets/live-sdk/live-sdk';
 import PlayEvents from '../../assets/live-sdk/player-evt';
 import NotLive from './not-live';
 import AudioPanel from './audio-panel';
+import WebViewUi from '../../components/WebViewUi';
 import VideoComputed from './video-computed';
 import { config } from '../../assets/utils/config';
 import { bus, UPDATE_PLAYER_STATE, PLAYER_CLICK } from '../../assets/utils/event-bus';
@@ -61,7 +62,7 @@ export default {
     NotLive,
     AudioPanel,
     VideoComputed,
-    WebViewUi: () => import('../../components/WebViewUi')
+    WebViewUi,
   },
   props: {
     isSmallWindow: Boolean,
