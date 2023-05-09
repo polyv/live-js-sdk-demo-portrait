@@ -16,7 +16,6 @@ const instance = axios.create();
  * @param {String} apiType 接口类型，normal为api.polyv.net，chat为apichat.polyv.net
  */
 instance.interceptors.request.use(async (config) => {
-  // console.info(config);
   let data = {};
   switch (config.method) {
     case 'get':

@@ -3,6 +3,10 @@
     v-if="channelDetail"
     class="c-portrait-view"
     :style="watchStyle">
+    <!-- 签到 -->
+    <mobileCheckIn v-show="!isSmallWindow" />
+    <!-- 普通抽奖 -->
+    <mobileLottery v-show="!isSmallWindow" />
     <!-- 问卷 -->
     <questionnaire v-show="!isSmallWindow" />
     <!-- 答题卡 -->
@@ -118,6 +122,8 @@ import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
+import MobileLottery from '../components/Lottery/MobileLottery';
+import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
 
 export default {
   name: 'plv-portrait-view',
@@ -162,6 +168,8 @@ export default {
     AnswerCard,
     QuickAnswerCard,
     PromotionLayer,
+    MobileLottery,
+    MobileCheckIn,
   },
 
   methods: {

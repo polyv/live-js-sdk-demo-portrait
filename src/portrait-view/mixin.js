@@ -7,6 +7,7 @@ import channelApi from '../assets/api/channel';
 import axios from '../assets/api/axios';
 import { genSign } from '../assets/utils/string';
 import debounce from 'lodash-es/debounce';
+import { config } from '../assets/utils/config';
 
 export default {
   data() {
@@ -65,17 +66,17 @@ export default {
       this.detailData = detailData;
       try {
         const requestData = {
-          appId: this.appId,
-          timestamp: Date.now(),
-          channelId: detailData.channelId,
-          viewerId: detailData.userId,
+          appId: config.appId,
+          timestamp: new Date().getTime(),
+          channelId: config.channelId,
+          viewerId: config.user.userId,
         };
-        requestData.sign = genSign(requestData, this.appSecret);
-        const res = await axios.post('//api.polyv.net/live/v3/channel/watch/get-api-token', requestData);
+        requestData.sign = genSign(requestData, config.appSecret);
+        const res = await axios.post('/live/v3/channel/watch/get-api-token', requestData, { ignoreSign: true });
         if (res?.data) {
           const token = res.data.token;
           /* eslint-disable */
-          cb && cb({ channelToken: token });
+          cb && cb({ viewerApiToken: token });
         }
       } catch (e) {}
     },
@@ -89,9 +90,9 @@ export default {
           getViewerApiToken: this.getViewerApiToken,
           socket: liveSdk.socket,
           userInfo: {
-            nick: '',
-            pic: '',
-            userId: channelDetail.userId
+            nick: config.user.userName,
+            pic: config.defaultAvatar,
+            userId: config.user.userId
           },
           channelInfo: {
             channelId: channelDetail.channelId,
