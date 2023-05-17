@@ -110,14 +110,15 @@ export default {
 
     // 发送点赞socket与接口
     async sendLikes() {
+      const selfLikeCount = this.selfLikeCount;
       if (this.selfLikeCount) {
-        liveSdk.sendLike(this.selfLikeCount);
+        liveSdk.sendLike(selfLikeCount);
         try {
           await likeApi.sendLikes(this.selfLikeCount);
         } catch (e) {
           console.warn(e);
         } finally {
-          this.selfLikeCount = 0;
+          this.selfLikeCount = this.selfLikeCount - selfLikeCount;
         }
       }
     },
