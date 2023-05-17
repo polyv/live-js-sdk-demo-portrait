@@ -114,7 +114,7 @@ export default {
       if (this.selfLikeCount) {
         liveSdk.sendLike(selfLikeCount);
         try {
-          await likeApi.sendLikes(this.selfLikeCount);
+          await likeApi.sendLikes(selfLikeCount);
         } catch (e) {
           console.warn(e);
         } finally {
