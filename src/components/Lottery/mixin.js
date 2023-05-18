@@ -20,6 +20,10 @@ export default {
   created() {
     this.lotterySdk = new Lottery();
   },
+  mounted() {
+    // 将中奖记录挂件移动到 聊天室内部，使其跟随聊天室内部元素
+    document.getElementById('chatPendant').appendChild(document.getElementById('lotteryRecord'));
+  },
   computed: {
     lotteryEndtitle() {
       const titles = {
