@@ -1,11 +1,17 @@
 <template>
   <div class="plv-mobile-lottery-default">
     <!-- 中奖记录查看入口挂件 -->
-    <div class="plv-mobile-lottery_record-wrap" v-if="lotteryList && lotteryList.length >= 1" @click="setLotteryRecordVisible">
-      <div class="plv-mobile-lottery_record_img">
-        <span></span>
+    <div
+      id="lotteryRecord"
+      class="plv-mobile-lottery_record-wrap">
+      <div
+        v-if="lotteryList && lotteryList.length >= 1"
+        @click="setLotteryRecordVisible">
+        <div class="plv-mobile-lottery_record_img">
+          <span></span>
+        </div>
+        <div class="plv-mobile-lottery_record_text">中奖记录</div>
       </div>
-      <div class="plv-mobile-lottery_record_text">中奖记录</div>
     </div>
 
     <div class="plv-mobile-lottery-default__lottery-wrap" v-show="isLotteryShowing">
@@ -101,11 +107,9 @@ export default {
   z-index: 13;
 }
 .plv-mobile-lottery_record-wrap {
-  position: fixed;
-  bottom: 135px;
-  right: 16px;
-  z-index: 12;
-  cursor: pointer;
+  position: absolute;
+  top: -70px;
+  right: 0;
 }
 .plv-mobile-lottery_record_img {
   text-align: right;

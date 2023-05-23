@@ -73,7 +73,8 @@
           <!-- 更多&点赞 -->
           <div
             v-if="likeVisible || playerMenuBarVisible"
-            class="c-chat__control__btn">
+            class="c-chat__control__btn"
+            id="chatPendant">
             <!-- 点赞 -->
             <like
               v-if="likeVisible"
