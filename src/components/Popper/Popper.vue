@@ -67,7 +67,7 @@ export default {
     contentStyle() {
       return {
         position: this.position,
-        height: this.height
+        height: this.height || `${document.documentElement.clientHeight * 0.6}px`
       };
     }
   },

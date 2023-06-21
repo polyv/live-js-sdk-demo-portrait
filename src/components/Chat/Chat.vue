@@ -52,10 +52,12 @@
 
         <!-- 右侧按钮 -->
         <div class="c-chat__control__right">
-          <!-- 购物车入口 -->
           <div
             v-if="productEnabled"
             class="c-chat__control__btn">
+            <!-- 商品推送气泡 -->
+            <product-bubble v-if="productEnabled" />
+            <!-- 购物车入口 -->
             <div
               data-shopping-btn
               class="c-chat__control__btn__inner g-icon i-shop-car"
@@ -114,6 +116,7 @@ import MsgInput from '../Form/MsgInput';
 import Like from '../Like/Like';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import DonateAnimation from '../DonateAnimation/MobileDonateAnimation.vue';
+import ProductBubble from '../ProductBubble/ProductBubble';
 
 export default {
   data() {
@@ -132,6 +135,7 @@ export default {
     Like,
     ProgressBar,
     DonateAnimation,
+    ProductBubble,
   },
 
   props: {

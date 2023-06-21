@@ -75,8 +75,6 @@
             <donate
               v-if="donateGoodEnabled"
               :channel="channelDetail" />
-            <!-- 商品推送气泡 -->
-            <product-bubble v-if="productEnabled" />
             <!-- 商品列表 -->
             <product-list v-if="productEnabled" />
             <!-- 播放器控制器 -->
@@ -114,7 +112,6 @@ import BulletinPanel from '../components/Bulletin/BulletinPanel';
 import Intro from '../components/Intro/Intro';
 import Chat from '../components/Chat/Chat';
 import Donate from '../components/Donate/Donate';
-import ProductBubble from '../components/ProductBubble/ProductBubble';
 import ProductList from '../components/ProductList/ProductList';
 import PlayerUi from '../components/PlayerUI/PlayerUI';
 import BoundaryWrap from './components/BoundaryWrap';
@@ -161,7 +158,6 @@ export default {
     Intro,
     Chat,
     Donate,
-    ProductBubble,
     ProductList,
     PlayerUi,
     BoundaryWrap,
