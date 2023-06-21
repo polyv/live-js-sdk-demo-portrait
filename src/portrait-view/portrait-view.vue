@@ -2,7 +2,7 @@
   <div
     v-if="channelDetail"
     class="c-portrait-view"
-    :style="watchStyle">
+  >
     <!-- 签到 -->
     <mobileCheckIn v-show="!isSmallWindow" />
     <!-- 普通抽奖 -->
@@ -19,13 +19,22 @@
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
       @close="promotionLayerVisible = false"/>
-    <!-- 播放器 -->
-    <player
-      :channel="channelDetail"
-      :is-small-window="isSmallWindow"
-      :client-width="clientWidth"
-      @handleChangeToNormal="waitForRecover"
-      @player-init="handlePlayerInit" />
+    <template>
+      <!-- 播放器 -->
+      <player
+        :channel="channelDetail"
+        :is-small-window="isSmallWindow"
+        :client-width="clientWidth"
+        @handleChangeToNormal="waitForRecover"
+        @player-init="handlePlayerInit" />
+    </template>
+    <template>
+      <main-item elId="plv-master-item"/>
+      <template v-for="(item) of rtcList" >
+        <MainItem :elId="item.streamId" :key="item.streamId" />
+      </template>
+      <LocalRtcItem v-if="localStream" can-drag />
+    </template>
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
@@ -101,6 +110,7 @@ import mixin from './mixin';
 import playerControlMixin from './mixins/player-control';
 import channelBaseMixin from '../assets/mixins/channel-base';
 import WebViewMixin from './mixins/webview';
+import RtcMixin from './mixins/rtc-mixin';
 import { createLiveSdk, destroyLiveSdk } from '../assets/live-sdk/live-sdk';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
@@ -124,11 +134,13 @@ import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
+import MainItem from '../components/Rtc/RtcContainer/main-item.vue';
+import LocalRtcItem from '../components/Rtc/RtcContainer/local-rtc-item.vue';
 
 export default {
   name: 'plv-portrait-view',
 
-  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin],
+  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin, RtcMixin],
 
   data() {
     return {
@@ -170,6 +182,8 @@ export default {
     PromotionLayer,
     MobileLottery,
     MobileCheckIn,
+    MainItem,
+    LocalRtcItem,
   },
 
   methods: {
@@ -199,7 +213,7 @@ export default {
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 90vh;
   background: url('../components/Player/imgs/player-bg.png');
 }
 .c-portrait-view {
@@ -210,6 +224,7 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Arial,sans-serif;
   line-height: 1;
   box-sizing: border-box;
+  height: 100%;
 }
 .c-portrait-view__swiper__wrap {
   height: 100%;

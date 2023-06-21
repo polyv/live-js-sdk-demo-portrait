@@ -59,6 +59,14 @@ export default {
 
   methods: {
     async handlePlayerInit() {
+      // 连麦实例初始化完成，可以进行连麦相关代码调用，无延迟，普通直播并支持连麦的情况下会回调
+      liveSdk.player.on('rtcInitialized', (rtc) => {
+        // 也可以这样获取实例 liveSdk.player.rtcInstance
+        console.log('连麦sdk实例', rtc);
+        // 连麦sdk加载后调用相关代码
+        this.rtcInstance = rtc;
+        this.initRtcEvents();
+      });
       // 重新获取流信息
       const { data: detailData } = await channelApi.getChannelDetail();
 

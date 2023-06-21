@@ -9,7 +9,6 @@ let loaderPromise = null;
 
 export let PolyvLiveSdk;
 export let liveSdk = null;
-
 // 加载sdk文件
 export function loadLiveSdk() {
   if (!loaderPromise) {
