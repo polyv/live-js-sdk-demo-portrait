@@ -2,6 +2,7 @@
   <popper
     class="c-product-popper"
     swiper-to-close
+    auto-set-height
     v-model="shoppingVisible">
     <div slot="title" class="c-product-popper__title">
       <i class="i-shopping g-img-cover"></i>

@@ -37,6 +37,10 @@ export default {
       type: String,
       default: 'absolute'
     },
+    autoSetHeight: {
+      type: Boolean,
+      default: false,
+    },
     height: String,
     // 切换轮播屏时是否关闭弹窗
     swiperToClose: {
@@ -67,7 +71,7 @@ export default {
     contentStyle() {
       return {
         position: this.position,
-        height: this.height || `${document.documentElement.clientHeight * 0.6}px`
+        height: this.autoSetHeight ? `${document.documentElement.clientHeight * 0.6}px` : this.height
       };
     }
   },
