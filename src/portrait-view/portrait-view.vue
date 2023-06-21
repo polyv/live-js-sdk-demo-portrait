@@ -11,8 +11,10 @@
     <questionnaire v-show="!isSmallWindow" />
     <!-- 答题卡 -->
     <answer-card v-show="!isSmallWindow" />
-    <!-- 答题卡 -->
+    <!-- 快速答题卡 -->
     <quick-answer-card v-show="!isSmallWindow" />
+    <!-- 举报反馈 -->
+    <feed-back v-show="!isSmallWindow"/>
     <!-- 关注公众号 -->
     <promotion-layer
       v-show="!isSmallWindow"
@@ -121,6 +123,7 @@ import ChapterList from '../components/ChapterList/ChapterList';
 import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
+import FeedBack from '../components/FeedBack/MobileFeedBack.vue';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
@@ -167,6 +170,7 @@ export default {
     Questionnaire,
     AnswerCard,
     QuickAnswerCard,
+    FeedBack,
     PromotionLayer,
     MobileLottery,
     MobileCheckIn,

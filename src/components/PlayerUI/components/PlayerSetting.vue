@@ -72,6 +72,17 @@
         <i class="c-player-setting__content__item__icon g-icon i-rate"></i>
         <span class="c-player-setting__content__item__text">切换倍速</span>
       </div>
+      <!-- 举报投诉 -->
+      <div
+        class="c-player-setting__content__item"
+        @click="handleClickFeedBack">
+        <i
+          :class="[
+            'c-player-setting__content__item__icon',
+            'g-icon',
+            'i-feed']"></i>
+        <span class="c-player-setting__content__item__text">举报投诉</span>
+      </div>
     </ul>
 
     <!-- 清晰度选择 -->
@@ -88,11 +99,12 @@
       :list="rateList"
       class="c-player-setting--rate"
       @change="handleChangeRate($event.value)" />
+
   </popper>
 </template>
 
 <script>
-import { PLAYER_SETTING_VISIBLE, ONLY_HOST, bus } from '../../../assets/utils/event-bus';
+import { PLAYER_SETTING_VISIBLE, ONLY_HOST, FEED_BACK_VISIBLE, bus } from '../../../assets/utils/event-bus';
 import Popper from '../../Popper/Popper';
 import channelBaseMixin from '../../../assets/mixins/channel-base';
 import SettingSelect from './setting-select';
@@ -204,7 +216,11 @@ export default {
         this.onlyHost = true;
       }
       bus.$emit(ONLY_HOST, this.onlyHost);
-    }
+    },
+    handleClickFeedBack() {
+      this.visible = false;
+      bus.$emit(FEED_BACK_VISIBLE, true);
+    },
   },
 
   mounted() {
