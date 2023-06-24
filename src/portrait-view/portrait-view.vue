@@ -33,7 +33,13 @@
       <template v-for="(item) of rtcList" >
         <MainItem :elId="item.streamId" :key="item.streamId" />
       </template>
-      <LocalRtcItem v-if="localStream" can-drag />
+      <LocalRtcItem
+        v-if="localStream"
+        can-drag
+        :mic-on="localStreamMic"
+        :cam-on="localStreamCam"
+        :nick="rtcInstance.config.nick"
+      />
     </template>
 
     <div class="c-portrait-view__swiper__wrap">
@@ -213,7 +219,8 @@ export default {
 body {
   margin: 0;
   padding: 0;
-  height: 90vh;
+  height: 100vh;
+  overflow: hidden;
   background: url('../components/Player/imgs/player-bg.png');
 }
 .c-portrait-view {
