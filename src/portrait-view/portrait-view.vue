@@ -21,13 +21,32 @@
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
       @close="promotionLayerVisible = false" />
-    <!-- 播放器 -->
-    <player
-      :channel="channelDetail"
-      :is-small-window="isSmallWindow"
-      :client-width="clientWidth"
-      @handleChangeToNormal="waitForRecover"
-      @player-init="handlePlayerInit" />
+    <template>
+      <!-- 播放器 -->
+      <player
+        ref="cPlayer"
+        :channel="channelDetail"
+        :is-small-window="isSmallWindow"
+        :client-width="clientWidth"
+        @handleChangeToNormal="waitForRecover"
+        @player-init="handlePlayerInit" />
+    </template>
+    <template>
+      <div class="c-rtc__list">
+        <main-item elId="master" class="c-rtc-master-item" />
+        <div class="c-rtc__list-other">
+          <template v-for="(item) of rtcList">
+            <MainItem :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
+          </template>
+        </div>
+      </div>
+      <LocalRtcItem
+        v-if="localStream"
+        can-drag
+        :mic-on="localStreamMic"
+        :cam-on="localStreamCam"
+        :nick="rtcInstance.config.nick" />
+    </template>
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
@@ -101,6 +120,7 @@ import mixin from './mixin';
 import playerControlMixin from './mixins/player-control';
 import channelBaseMixin from '../assets/mixins/channel-base';
 import WebViewMixin from './mixins/webview';
+import RtcMixin from './mixins/rtc-mixin';
 import { createLiveSdk, destroyLiveSdk } from '../assets/live-sdk/live-sdk';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
@@ -124,11 +144,13 @@ import FeedBack from '../components/FeedBack/MobileFeedBack.vue';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
+import MainItem from '../components/Rtc/RtcContainer/main-item.vue';
+import LocalRtcItem from '../components/Rtc/RtcContainer/local-rtc-item.vue';
 
 export default {
   name: 'plv-portrait-view',
 
-  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin],
+  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin, RtcMixin],
 
   data() {
     return {
@@ -170,6 +192,8 @@ export default {
     PromotionLayer,
     MobileLottery,
     MobileCheckIn,
+    MainItem,
+    LocalRtcItem,
   },
 
   methods: {
@@ -194,13 +218,18 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+html {
+  height: 100%;
+}
 /* 避免小窗口下 网速慢时出现白屏 */
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  background: url('../components/Player/imgs/player-bg.png');
+  height: 100%;
+  overflow: hidden;
+  background-image: url('../components/Player/imgs/player-bg.png');
+  background-size: cover;
 }
 .c-portrait-view {
   position: fixed;
@@ -210,7 +239,28 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Arial,sans-serif;
   line-height: 1;
   box-sizing: border-box;
+  height: 100%;
 }
+
+.c-rtc__list {
+  position: absolute;
+  z-index: 11;
+  overflow-x: auto;
+  top: 16.6%;
+}
+
+.c-rtc__list-other {
+  height: 80px;
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.c-rtc__list-other-item {
+  height: 100%;
+  display: inline-block;
+}
+
 .c-portrait-view__swiper__wrap {
   height: 100%;
   position: relative;
@@ -242,5 +292,8 @@ body {
 }
 .p-watch--small-window .c-player {
   z-index: 10001;
+}
+.c-hide {
+  display: none !important;
 }
 </style>
