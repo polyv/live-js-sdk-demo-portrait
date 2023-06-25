@@ -22,6 +22,7 @@
     <template>
       <!-- 播放器 -->
       <player
+        ref="cPlayer"
         :channel="channelDetail"
         :is-small-window="isSmallWindow"
         :client-width="clientWidth"
@@ -29,10 +30,14 @@
         @player-init="handlePlayerInit" />
     </template>
     <template>
-      <main-item elId="plv-master-item"/>
-      <template v-for="(item) of rtcList" >
-        <MainItem :elId="item.streamId" :key="item.streamId" />
-      </template>
+      <div class="c-rtc__list">
+        <main-item elId="master" class="c-rtc-master-item" />
+        <div class="c-rtc__list-other">
+          <template v-for="(item) of rtcList" >
+            <MainItem :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
+          </template>
+        </div>
+      </div>
       <LocalRtcItem
         v-if="localStream"
         can-drag
@@ -214,14 +219,18 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+html {
+  height: 100%;
+}
 /* 避免小窗口下 网速慢时出现白屏 */
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
-  background: url('../components/Player/imgs/player-bg.png');
+  background-image: url('../components/Player/imgs/player-bg.png');
+  background-size: cover;
 }
 .c-portrait-view {
   position: fixed;
@@ -233,6 +242,26 @@ body {
   box-sizing: border-box;
   height: 100%;
 }
+
+.c-rtc__list {
+  position: absolute;
+  z-index: 11;
+  overflow-x: auto;
+  top: 16.6%;
+}
+
+.c-rtc__list-other {
+  height: 80px;
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.c-rtc__list-other-item {
+  height: 100%;
+  display: inline-block;
+}
+
 .c-portrait-view__swiper__wrap {
   height: 100%;
   position: relative;
@@ -264,5 +293,8 @@ body {
 }
 .p-watch--small-window .c-player {
   z-index: 10001;
+}
+.c-hide {
+  display: none !important;
 }
 </style>

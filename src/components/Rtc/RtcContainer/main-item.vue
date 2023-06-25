@@ -1,6 +1,6 @@
 <template>
   <div class="c-rtc-item">
-    <div :id="`plv-rtc-item__${elId}`"></div>
+    <div :id="`plv-rtc-item__${elId}`" class="c-rtc-item__container"></div>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss">
-.c-rtc-item {
-
+.c-rtc-item__container {
+  height: 100%;
 }
 </style>

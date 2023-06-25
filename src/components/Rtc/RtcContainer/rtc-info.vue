@@ -21,11 +21,6 @@ export default {
   align-items: center;
   user-select: none;
 
-  & > img {
-    width: 10px;
-    height: 14px;
-  }
-
   .c-rtc-info__name {
     overflow: hidden;
     text-overflow: ellipsis;

@@ -61,13 +61,13 @@ export default {
             return lang[type];
           });
         }
-        this.toolkit.show();
+        this.toolkit && this.toolkit.show();
       });
 
       this.rtcInstance.on('CLOSE_MICROPHONE', (evt) => {
         console.info('讲师关闭连麦，可禁止发起连麦申请', evt);
         this.showLinkButton = false;
-        this.toolkit.hide();
+        this.toolkit && this.toolkit.hide();
       });
 
       this.rtcInstance.on('ALLOW_MICROPHONE', (evt) => {
@@ -80,6 +80,7 @@ export default {
         console.info('准备开始推流，设置推流参数', evt);
         if (!player.lowLatency) {
           player.pause();
+          this.$refs.cPlayer.$el.classList.add('c-hide');
         }
         this.localStream = evt;
         this.$nextTick(() => {
@@ -118,21 +119,22 @@ export default {
       });
 
       this.rtcInstance.on('USER_STREAM_ADDED', (evt) => {
-        this.$set(this.rtcList, evt.streamId, evt);
-        this.$nextTick(() => {
-          if (evt.teacher) {
-            evt.subscribe({
-              element: document.getElementById('plv-master-item')
-            }, (err) => {
-              console.info('订阅失败', err);
-            });
-          } else {
+        if (evt.teacher) {
+          evt.subscribe({
+            element: document.getElementById('plv-rtc-item__master'),
+            control: false
+          }, (err) => {
+            console.info('订阅失败', err);
+          });
+        } else {
+          this.$set(this.rtcList, evt.streamId, evt);
+          this.$nextTick(() => {
             evt.subscribe({
               element: document.getElementById(`plv-rtc-item__${evt.streamId}`),
-              control: true
+              control: false
             });
-          }
-        });
+          });
+        }
       });
 
       this.rtcInstance.on('USER_STREAM_SUBSCRIBED', (evt) => {
@@ -163,6 +165,7 @@ export default {
     },
 
     resetRtcState() {
+      this.$refs.cPlayer.$el.classList.remove('c-hide');
       this.rtcList = {};
       this.localStream = '';
       this.localStreamCam = true;

@@ -10,6 +10,7 @@
       src="./img/cam-off.png"
       alt="cam-off"
       class="plv-rtc-item__cam" />
+    <div class="plv-rtc-item__bg"></div>
     <RtcInfo class="plv-rtc-item__info" :mic="micOn" :name="nick" />
   </div>
 </template>
@@ -62,7 +63,7 @@ export default {
       this.clientHeight = Math.floor(height);
       this.clientWidth = Math.floor(width);
       this.moveInfoX = this.clientWidth - this.elWidth - 8;
-      this.moveInfoY = Math.floor(this.clientHeight * 0.7);
+      this.moveInfoY = Math.floor(this.clientHeight * 0.6);
     },
     touchStart(ev) {
       this.$refs['c-rtc-item__local'].addEventListener('touchmove', this.touchMove);
@@ -125,6 +126,8 @@ export default {
   position: fixed;
   z-index: 11;
   border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.16);
 }
 #plv-rtc-item__local {
   height: 100%;
@@ -137,6 +140,15 @@ export default {
   width: 100%;
   left: 0;
 }
+.plv-rtc-item__bg {
+  position: absolute;
+  z-index: 1;
+  height: 60px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+}
 .c-rtc-item__local__auto-connect {
   transition: transform ease-in-out .3s;
 }
@@ -148,5 +160,6 @@ export default {
   height: 35px;
   box-sizing: border-box;
   padding: 8px;
+  z-index: 2;
 }
 </style>
