@@ -86,18 +86,18 @@ export default {
       this.moveInfoX -= moveX;
       this.moveInfoY -= moveY;
       // 判断是否超出上左
-      if (this.moveInfoX < 0) {
-        this.moveInfoX = 0;
+      if (this.moveInfoX < 8) {
+        this.moveInfoX = 8;
       }
-      if (this.moveInfoY < 0) {
-        this.moveInfoY = 0;
+      if (this.moveInfoY < 8) {
+        this.moveInfoY = 8;
       }
       // 判断是否超出下右
-      if (this.moveInfoX + this.elWidth > this.clientWidth) {
-        this.moveInfoX = this.clientWidth - this.elWidth;
+      if (this.moveInfoX + this.elWidth > this.clientWidth - 8) {
+        this.moveInfoX = this.clientWidth - this.elWidth - 8;
       }
-      if (this.moveInfoY + this.elHeight > this.clientHeight) {
-        this.moveInfoY = this.clientHeight - this.elHeight;
+      if (this.moveInfoY + this.elHeight > this.clientHeight - 8) {
+        this.moveInfoY = this.clientHeight - this.elHeight - 8;
       }
     },
 
@@ -135,13 +135,21 @@ export default {
 #plv-rtc-item__local {
   height: 100%;
   width: 100%;
+
+  .pv-rtc-player-video {
+    background: unset !important;
+
+    & > div {
+      background: unset !important;
+    }
+  }
 }
 .plv-rtc-item__cam {
   position: absolute;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  left: 0;
+  top: -1%;
+  height: 102%;
+  width: 102%;
+  left: -1%;
 }
 .plv-rtc-item__net {
   position: absolute;

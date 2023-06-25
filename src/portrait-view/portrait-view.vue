@@ -110,6 +110,12 @@
         </swiper-slide>
       </swiper>
     </div>
+    <Dialog
+      v-if="handUpDialog"
+      title="确定挂断连麦吗"
+      @confirm="handUp"
+      @cancel="handUpDialog = false"
+    />
   </div>
 </template>
 
@@ -144,6 +150,7 @@ import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
 import MainItem from '../components/Rtc/RtcContainer/main-item.vue';
 import LocalRtcItem from '../components/Rtc/RtcContainer/local-rtc-item.vue';
+import Dialog from '../components/Dialog/dialog.vue';
 
 export default {
   name: 'plv-portrait-view',
@@ -192,6 +199,7 @@ export default {
     MobileCheckIn,
     MainItem,
     LocalRtcItem,
+    Dialog,
   },
 
   methods: {

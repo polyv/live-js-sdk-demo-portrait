@@ -12,7 +12,8 @@ export default {
       toolkit: '',
       localStreamCam: true,
       localStreamMic: true,
-      localUplink: 0
+      localUplink: 0,
+      handUpDialog: false,
     };
   },
 
@@ -23,7 +24,7 @@ export default {
       switch (type) {
         case 'applyAndStop':
           if (this.rtcInstance.rtcConnected) {
-            this.rtcInstance.leaveChannel(false);
+            this.handUpDialog = true;
           } else if (this.rtcInstance.applyStatus) {
             toolkit.cancel();
             this.rtcInstance.cancelJoinChannel();
@@ -48,6 +49,7 @@ export default {
           break;
       }
     },
+
     initRtcEvents() {
       const player = liveSdk.player;
       this.rtcInstance.on('OPEN_MICROPHONE', (evt) => {
@@ -168,12 +170,19 @@ export default {
       });
     },
 
+    // 重置状态
     resetRtcState() {
       this.$refs.cPlayer.$el.classList.remove('c-hide');
       this.rtcList = {};
       this.localStream = '';
       this.localStreamCam = true;
       this.localStreamMic = true;
+    },
+
+    // 挂断
+    handUp() {
+      this.rtcInstance.leaveChannel(false);
+      this.handUpDialog = false;
     }
   }
 };
