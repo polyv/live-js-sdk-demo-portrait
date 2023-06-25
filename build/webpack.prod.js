@@ -1,6 +1,7 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.base.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
@@ -17,5 +18,9 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: '/polyv-portrait-watch.min.css'
     }),
+    new HtmlWebpackPlugin({
+      template: './example/index.html',
+      inject: true
+    })
   ]
 });
