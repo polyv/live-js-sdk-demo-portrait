@@ -180,7 +180,7 @@ export default {
     },
 
     watchFeedbackEnabled() {
-      return this.ynToBool(this.channelData.watchFeedbackEnabled);
+      return this.ynToBool(this.channelData.watchFeedbackEnabled || 'N');
     }
   },
 
