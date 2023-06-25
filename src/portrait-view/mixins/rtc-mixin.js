@@ -11,7 +11,8 @@ export default {
       isRtcState: false,
       toolkit: '',
       localStreamCam: true,
-      localStreamMic: true
+      localStreamMic: true,
+      localUplink: 0
     };
   },
 
@@ -161,6 +162,9 @@ export default {
       this.rtcInstance.on('LOCAL_UNMUTE_VIDEO', (evt) => {
         this.toolkit.toggleCamera(false);
         this.localStreamCam = true;
+      });
+      this.rtcInstance.on('NETWORK_QUALITY', (net) => {
+        this.localUplink = net.uplinkNetworkQuality;
       });
     },
 

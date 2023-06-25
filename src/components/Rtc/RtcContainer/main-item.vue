@@ -6,12 +6,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-
-    };
-  },
-
   props: {
     elId: String,
   }
