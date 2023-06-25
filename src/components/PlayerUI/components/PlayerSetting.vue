@@ -74,6 +74,7 @@
       </div>
       <!-- 举报投诉 -->
       <div
+        v-if="watchFeedbackEnabled"
         class="c-player-setting__content__item"
         @click="handleClickFeedBack">
         <i
@@ -163,7 +164,7 @@ export default {
       const weixinDonateEnabled =
         this.ynToBool(this.channelData?.userConfig?.weixinAccountFunctionEnabled || 'Y') &&
         (donateCashEnabled ||
-        donateGoodEnabled);
+          donateGoodEnabled);
       const donatePointEnabled = this.ynToBool(donateSetting?.donatePointEnabled || 'N');
 
       return (weixinDonateEnabled || donatePointEnabled) && !this.isSeminar;
@@ -176,6 +177,10 @@ export default {
       const donatePointEnabled = this.ynToBool(donateSetting.donatePointEnabled);
 
       return (donateGoodEnabled || donatePointEnabled);
+    },
+
+    watchFeedbackEnabled() {
+      return this.ynToBool(this.channelData.watchFeedbackEnabled);
     }
   },
 
