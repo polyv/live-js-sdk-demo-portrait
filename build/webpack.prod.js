@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = merge(common, {
   mode: 'production',
   entry: {
-    main: './src/index.js'
+    main: './example/dist.js'
   },
   output: {
     publicPath: '/dist/',
