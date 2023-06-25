@@ -13,14 +13,14 @@
     <answer-card v-show="!isSmallWindow" />
     <!-- 快速答题卡 -->
     <quick-answer-card v-show="!isSmallWindow" />
-    <!-- 举报反馈 -->
-    <feed-back v-show="!isSmallWindow"/>
+    <!-- 举报反馈/投诉 -->
+    <feed-back v-show="!isSmallWindow" />
     <!-- 关注公众号 -->
     <promotion-layer
       v-show="!isSmallWindow"
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
-      @close="promotionLayerVisible = false"/>
+      @close="promotionLayerVisible = false" />
     <!-- 播放器 -->
     <player
       :channel="channelDetail"

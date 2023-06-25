@@ -4,7 +4,7 @@ import { geFeedBackSdk } from './feed-back';
 export default {
   data() {
     return {
-      // 反馈 SDK 实例
+      // 举报反馈/投诉 SDK 实例
       feedBackSdk: geFeedBackSdk(),
       // 是否展示反馈
       isShowFeedBack: false,
@@ -13,7 +13,7 @@ export default {
 
   computed: {
     feedBackTitle() {
-      return '举报反馈';
+      return '举报反馈'; // 投诉
     }
   },
 
