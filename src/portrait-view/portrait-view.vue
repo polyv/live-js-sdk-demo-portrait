@@ -256,7 +256,7 @@ body {
 }
 
 .c-rtc-master-item {
-  height: 100%;
+  height: calc(100% - 80px);
 }
 
 .c-rtc__list-other {
