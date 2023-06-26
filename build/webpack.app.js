@@ -11,7 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = merge(common, {
   mode: 'production',
   entry: {
-    index: './example/index.js'
+    index: './example/dist.js'
   },
   output: {
     path: path.resolve(__dirname, '../.dist'),

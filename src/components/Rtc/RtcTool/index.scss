@@ -3,7 +3,7 @@
   z-index: 2000;
   position: absolute;
   right: 0;
-  top: 50%;
+  top: 29.3%;
   padding: 8px 0;
   background-color: #4e4c5b;
   color: #fff;
@@ -54,17 +54,13 @@
   }
 
   .rtc-toolkit-apply {
-    background-image: url(./imgs/phone.png);
-    background-size: 22px 7px;
-    background-color: #41c08c;
-    transform: rotate(-135deg);
+    background-image: url(./imgs/call.png);
   }
 
   &.rtc-toolkit-cancel,
   &.rtc-toolkit-success {
     .rtc-toolkit-apply {
-      background-color: #e96064;
-      transform: rotate(0);
+      background-image: url(./imgs/hand-up.png);
     }
   }
 

@@ -21,32 +21,30 @@
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
       @close="promotionLayerVisible = false" />
-    <template>
-      <!-- 播放器 -->
-      <player
-        ref="cPlayer"
-        :channel="channelDetail"
-        :is-small-window="isSmallWindow"
-        :client-width="clientWidth"
-        @handleChangeToNormal="waitForRecover"
-        @player-init="handlePlayerInit" />
-    </template>
-    <template>
-      <div class="c-rtc__list">
-        <main-item elId="master" class="c-rtc-master-item" />
-        <div class="c-rtc__list-other">
-          <template v-for="(item) of rtcList">
-            <MainItem :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
-          </template>
-        </div>
+    <!-- 播放器 -->
+    <player
+      ref="cPlayer"
+      :channel="channelDetail"
+      :is-small-window="isSmallWindow"
+      :client-width="clientWidth"
+      @handleChangeToNormal="waitForRecover"
+      @player-init="handlePlayerInit" />
+    <div class="c-rtc__list">
+      <main-item elId="master" class="c-rtc-master-item" />
+      <div class="c-rtc__list-other">
+        <template v-for="(item) of rtcList">
+          <main-item :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
+        </template>
       </div>
-      <LocalRtcItem
-        v-if="localStream"
-        can-drag
-        :mic-on="localStreamMic"
-        :cam-on="localStreamCam"
-        :nick="rtcInstance.config.nick" />
-    </template>
+    </div>
+    <local-rtc-item
+      v-if="localStream"
+      can-drag
+      :mic-on="localStreamMic"
+      :cam-on="localStreamCam"
+      :nick="rtcInstance.config.nick"
+      :up-link="localUplink"
+    />
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
@@ -112,6 +110,12 @@
         </swiper-slide>
       </swiper>
     </div>
+    <Dialog
+      v-if="handUpDialog"
+      title="确定挂断连麦吗"
+      @confirm="handUp"
+      @cancel="handUpDialog = false"
+    />
   </div>
 </template>
 
@@ -146,6 +150,7 @@ import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
 import MainItem from '../components/Rtc/RtcContainer/main-item.vue';
 import LocalRtcItem from '../components/Rtc/RtcContainer/local-rtc-item.vue';
+import Dialog from '../components/Dialog/dialog.vue';
 
 export default {
   name: 'plv-portrait-view',
@@ -194,6 +199,7 @@ export default {
     MobileCheckIn,
     MainItem,
     LocalRtcItem,
+    Dialog,
   },
 
   methods: {
