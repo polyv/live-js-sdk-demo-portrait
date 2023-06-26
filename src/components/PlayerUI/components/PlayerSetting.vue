@@ -239,15 +239,19 @@ export default {
 
 <style>
 .c-player-setting__content {
-  padding: 10px 0 30px;
+  padding: 10px 0 30px 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 .c-player-setting__content__item {
   display: inline-flex;
-  width: 72px;
-  justify-content: center;
+  width: 20%;
   align-items: center;
   flex-direction: column;
+  height: 72px;
+  box-sizing: border-box;
+  margin-top: 10px;
 }
 .c-player-setting__content__item__icon {
   width: 32px;
