@@ -20,8 +20,7 @@
         :totalVisible="false"
         @total-change="num => (total = num)"
         @browse-product="handleBrowseProduct"
-        @click-buy="handleClickBuy"
-      />
+        @click-buy="handleClickBuy" />
     </div>
   </popper>
 </template>
@@ -92,7 +91,6 @@ export default {
 <style lang="scss">
 .c-product-popper .c-popper__content {
   padding-top: 54px;
-  background: #262523;
 }
 .c-product-popper .c-popper__content .c-popper__content__title {
   position: absolute;
@@ -124,7 +122,7 @@ export default {
   height: 100%;
   width: 100%;
 }
-.c-product-list {
+.c-product-list.plv-iar-product {
   background: none;
 }
 .c-product-list .plv-iar-product__content {
