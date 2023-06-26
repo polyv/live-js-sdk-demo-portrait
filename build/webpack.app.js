@@ -26,7 +26,7 @@ module.exports = merge(common, {
       inject: true
     }),
     new MiniCssExtractPlugin({
-      filename: '/polyv-portrait-watch.min.css'
+      filename: 'polyv-portrait-watch.min.css'
     }),
   ],
 });
