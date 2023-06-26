@@ -120,7 +120,7 @@ export default {
   color: #fff;
   padding-top: 20px;
   overflow: hidden;
-  background: rgba(0, 0, 0, .88);
+  background: #262523;
   box-sizing: border-box;
 }
 .c-popper__content__title {
