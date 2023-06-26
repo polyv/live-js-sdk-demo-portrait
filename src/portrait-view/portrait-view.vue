@@ -29,22 +29,24 @@
       :client-width="clientWidth"
       @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
-    <div class="c-rtc__list" :style="`height: ${rtcListHeight}px`">
-      <main-item elId="master" class="c-rtc-master-item" />
-      <div class="c-rtc__list-other">
-        <template v-for="(item) of rtcList">
-          <main-item :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
-        </template>
+    <template v-if="isRtcState">
+      <div class="c-rtc__list" :style="`height: ${rtcListHeight}px`">
+        <main-item elId="master" class="c-rtc-master-item" />
+        <div class="c-rtc__list-other">
+          <template v-for="(item) of rtcList">
+            <main-item :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
+          </template>
+        </div>
       </div>
-    </div>
-    <local-rtc-item
-      v-if="localStream"
-      can-drag
-      :mic-on="localStreamMic"
-      :cam-on="localStreamCam"
-      :nick="rtcInstance.config.nick"
-      :up-link="localUplink"
-    />
+      <local-rtc-item
+        v-if="localStream"
+        can-drag
+        :mic-on="localStreamMic"
+        :cam-on="localStreamCam"
+        :nick="rtcInstance.config.nick"
+        :up-link="localUplink"
+      />
+    </template>
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
@@ -253,6 +255,7 @@ body {
   z-index: 11;
   overflow-x: auto;
   top: 16.6%;
+  width: 100%;
 }
 
 .c-rtc-master-item {

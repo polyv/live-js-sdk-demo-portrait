@@ -123,6 +123,7 @@ export default {
         if (this.showLinkButton) {
           this.toolkit.show();
         }
+        this.isRtcState = false;
       });
 
       this.rtcInstance.on('USER_STREAM_ADDED', (evt) => {
