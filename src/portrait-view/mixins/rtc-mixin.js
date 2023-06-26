@@ -14,7 +14,11 @@ export default {
       localStreamMic: true,
       localUplink: 0,
       handUpDialog: false,
+      rtcListHeight: 0,
     };
+  },
+  mounted() {
+    this.calcRtcListHeight();
   },
 
   methods: {
@@ -183,6 +187,10 @@ export default {
     handUp() {
       this.rtcInstance.leaveChannel(false);
       this.handUpDialog = false;
+    },
+
+    calcRtcListHeight() {
+      this.rtcListHeight = Math.ceil(9 * document.body.clientWidth / 16) + 80;
     }
   }
 };

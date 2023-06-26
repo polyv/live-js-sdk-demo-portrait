@@ -29,7 +29,7 @@
       :client-width="clientWidth"
       @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
-    <div class="c-rtc__list">
+    <div class="c-rtc__list" :style="`height: ${rtcListHeight}px`">
       <main-item elId="master" class="c-rtc-master-item" />
       <div class="c-rtc__list-other">
         <template v-for="(item) of rtcList">
@@ -253,6 +253,10 @@ body {
   z-index: 11;
   overflow-x: auto;
   top: 16.6%;
+}
+
+.c-rtc-master-item {
+  height: 100%;
 }
 
 .c-rtc__list-other {
