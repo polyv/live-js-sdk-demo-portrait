@@ -10,6 +10,9 @@ export default {
       type: String,
       default: '挂断'
     }
+  },
+  mounted() {
+    document.body.appendChild(this.$el);
   }
 };
 </script>
@@ -27,7 +30,7 @@ export default {
 <style scoped>
 .c-dialog {
   position: fixed;
-  z-index: 1111;
+  z-index: 11111;
   width: 240px;
   height: 116px;
   top: 30%;
