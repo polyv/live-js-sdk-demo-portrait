@@ -6,10 +6,15 @@
   >
     <div id="plv-rtc-item__local"></div>
     <img
-      v-if="!camOn"
+      v-if="!camOn && videoLink"
       src="./img/cam-off.png"
       alt="cam-off"
       class="plv-rtc-item__cam" />
+    <img
+      v-else
+      src="./img/audio-link.png"
+      alt="link"
+      class="plv-rtc-item__cam"  />
     <div class="plv-rtc-item__net"><net :uplink="upLink" /></div>
     <div class="plv-rtc-item__bg"></div>
     <rtc-info class="plv-rtc-item__info" :mic="micOn" :name="nick" />
@@ -49,6 +54,7 @@ export default {
     camOn: Boolean,
     nick: String,
     upLink: Number,
+    videoLink: Boolean
   },
 
   mounted() {

@@ -15,6 +15,7 @@ export default {
       localUplink: 0,
       handUpDialog: false,
       rtcListHeight: 0,
+      videoLink: true,
     };
   },
   mounted() {
@@ -58,6 +59,7 @@ export default {
       const player = liveSdk.player;
       this.rtcInstance.on('OPEN_MICROPHONE', (evt) => {
         console.info('讲师开启连麦, 可发起申请加入连麦', evt);
+        this.videoLink = evt.type === 'video';
         this.showLinkButton = true;
         if (!this.toolkit) {
           this.toolkit = Toolkit(this.toolkitHandle, (type) => {

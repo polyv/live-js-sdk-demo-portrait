@@ -45,6 +45,7 @@
         :cam-on="localStreamCam"
         :nick="rtcInstance.config.nick"
         :up-link="localUplink"
+        :video-link="videoLink"
       />
     </template>
 
