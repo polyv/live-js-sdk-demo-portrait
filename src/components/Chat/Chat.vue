@@ -10,7 +10,7 @@
       <!-- 打赏动效 -->
       <donate-tips v-if="!isPlaybacking" />
       <!-- 打赏动效 -->
-      <donate-animation v-if="donateAnimationSwitch"/>
+      <donate-animation v-if="donateAnimationSwitch" />
       <!-- 聊天室 -->
       <chat-list
         :style="chatListStyle"
@@ -192,7 +192,7 @@ export default {
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
-  z-index: 10;
+  z-index: 20;
 }
 .c-chat__control__right {
   margin-left: auto;
