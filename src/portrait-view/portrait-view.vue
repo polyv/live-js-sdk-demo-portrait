@@ -31,10 +31,20 @@
       @player-init="handlePlayerInit" />
     <template v-if="isRtcState">
       <div class="c-rtc__list" :style="`height: ${rtcListHeight}px`">
-        <main-item elId="master" class="c-rtc-master-item" />
+        <main-item
+          elId="master"
+          class="c-rtc-master-item"
+          :stream="masterStream"
+          @resume="resetMasterPlayState" />
         <div class="c-rtc__list-other">
           <template v-for="(item) of rtcList">
-            <main-item :elId="item.streamId" :key="item.streamId" class="c-rtc__list-other-item" />
+            <main-item
+              :elId="item.streamId"
+              :key="item.streamId"
+              :stream="item.stream"
+              @resume="resetRtcListPlayState(item.streamId)"
+              class="c-rtc__list-other-item"
+            />
           </template>
         </div>
       </div>
@@ -214,6 +224,11 @@ export default {
   },
   mounted() {
     this.initPortrait();
+    window.addEventListener('pageshow', function(event) {
+      if ((event.persisted || window.performance) && window.performance.navigation.type === 2) {
+        location.reload();
+      }
+    }, false);
   },
 
   beforeDestroy() {
@@ -253,7 +268,7 @@ body {
 
 .c-rtc__list {
   position: absolute;
-  z-index: 11;
+  z-index: 10;
   overflow-x: auto;
   top: 16.6%;
   width: 100%;

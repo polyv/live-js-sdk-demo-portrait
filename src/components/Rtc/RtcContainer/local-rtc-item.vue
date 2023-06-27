@@ -11,7 +11,7 @@
       alt="cam-off"
       class="plv-rtc-item__cam" />
     <img
-      v-else
+      v-else-if="!videoLink"
       src="./img/audio-link.png"
       alt="link"
       class="plv-rtc-item__cam"  />
@@ -41,6 +41,7 @@ export default {
   components: { RtcInfo, Net },
 
   props: {
+    // 是否可以拖动
     canDrag: Boolean,
     elWidth: {
       type: Number,
@@ -50,11 +51,16 @@ export default {
       type: Number,
       default: 160
     },
+    // 麦克风开关装填
     micOn: Boolean,
+    // 摄像头开关状态
     camOn: Boolean,
+    // 昵称
     nick: String,
+    // 上行网络状态
     upLink: Number,
-    videoLink: Boolean
+    // 是否是视频连麦
+    videoLink: Boolean,
   },
 
   mounted() {

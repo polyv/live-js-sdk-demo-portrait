@@ -8,6 +8,7 @@ export default {
       showLinkButton: false,
       rtcList: {},
       localStream: '',
+      masterStream: '',
       isRtcState: false,
       toolkit: '',
       localStreamCam: true,
@@ -20,6 +21,16 @@ export default {
   },
   mounted() {
     this.calcRtcListHeight();
+  },
+
+  beforeDestroy() {
+    this.handUp();
+    this.rtcInstance = '';
+    this.showLinkButton = false;
+    this.rtcList = {};
+    this.localStream = '';
+    this.masterStream = '';
+    this.isRtcState = false;
   },
 
   methods: {
@@ -130,18 +141,30 @@ export default {
 
       this.rtcInstance.on('USER_STREAM_ADDED', (evt) => {
         if (evt.teacher) {
+          this.masterStream = evt.stream;
           evt.subscribe({
             element: document.getElementById('plv-rtc-item__master'),
-            control: false
+            control: false,
+            playCallBack: (err) => {
+              if (err) {
+                console.info('当前流播放失败');
+                this.$set(this.masterStream, 'playFail', true);
+              }
+            }
           }, (err) => {
             console.info('订阅失败', err);
           });
         } else {
-          this.$set(this.rtcList, evt.streamId, evt);
+          this.$set(this.rtcList, evt.streamId, evt.stream);
           this.$nextTick(() => {
             evt.subscribe({
               element: document.getElementById(`plv-rtc-item__${evt.streamId}`),
-              control: false
+              control: false,
+              playCallBack: (err) => {
+                if (err) {
+                  this.$set(this.rtcList[evt.streamId], 'playFail', true);
+                }
+              }
             });
           });
         }
@@ -194,6 +217,14 @@ export default {
 
     calcRtcListHeight() {
       this.rtcListHeight = Math.ceil(9 * document.body.clientWidth / 16) + 80;
+    },
+
+    resetRtcListPlayState(id) {
+      this.$set(this.rtcList[id], 'playFail', false);
+    },
+
+    resetMasterPlayState() {
+      this.$set(this.masterStream, 'playFail', false);
     }
   }
 };
