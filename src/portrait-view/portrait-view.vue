@@ -11,14 +11,16 @@
     <questionnaire v-show="!isSmallWindow" />
     <!-- 答题卡 -->
     <answer-card v-show="!isSmallWindow" />
-    <!-- 答题卡 -->
+    <!-- 快速答题卡 -->
     <quick-answer-card v-show="!isSmallWindow" />
+    <!-- 举报反馈/投诉 -->
+    <feed-back v-show="!isSmallWindow" />
     <!-- 关注公众号 -->
     <promotion-layer
       v-show="!isSmallWindow"
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
-      @close="promotionLayerVisible = false"/>
+      @close="promotionLayerVisible = false" />
     <!-- 播放器 -->
     <player
       :channel="channelDetail"
@@ -73,8 +75,6 @@
             <donate
               v-if="donateGoodEnabled"
               :channel="channelDetail" />
-            <!-- 商品推送气泡 -->
-            <product-bubble v-if="productEnabled" />
             <!-- 商品列表 -->
             <product-list v-if="productEnabled" />
             <!-- 播放器控制器 -->
@@ -112,7 +112,6 @@ import BulletinPanel from '../components/Bulletin/BulletinPanel';
 import Intro from '../components/Intro/Intro';
 import Chat from '../components/Chat/Chat';
 import Donate from '../components/Donate/Donate';
-import ProductBubble from '../components/ProductBubble/ProductBubble';
 import ProductList from '../components/ProductList/ProductList';
 import PlayerUi from '../components/PlayerUI/PlayerUI';
 import BoundaryWrap from './components/BoundaryWrap';
@@ -121,6 +120,7 @@ import ChapterList from '../components/ChapterList/ChapterList';
 import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
+import FeedBack from '../components/FeedBack/MobileFeedBack.vue';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
@@ -158,7 +158,6 @@ export default {
     Intro,
     Chat,
     Donate,
-    ProductBubble,
     ProductList,
     PlayerUi,
     BoundaryWrap,
@@ -167,6 +166,7 @@ export default {
     Questionnaire,
     AnswerCard,
     QuickAnswerCard,
+    FeedBack,
     PromotionLayer,
     MobileLottery,
     MobileCheckIn,

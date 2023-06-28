@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.js"
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.js",
+    "build:app": "cross-env NODE_ENV=production webpack --config build/webpack.app.js"
   },
   "dependencies": {
     "@polyv/emotion-sdk": "^2.1.0",
