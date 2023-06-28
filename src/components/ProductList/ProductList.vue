@@ -1,116 +1,132 @@
 <template>
   <popper
+    class="c-product-popper"
     swiper-to-close
-    class="c-product"
-    v-model="visible"
-    height="400px">
-    <div
-      slot="title"
-      class="c-product__title">
-      <i class="g-icon i-shopping"></i>
-      <span>共<font color="#FF9911"> {{ total }} </font>件商品</span>
+    auto-set-height
+    v-model="shoppingVisible">
+    <div slot="title" class="c-product-popper__title">
+      <i class="i-shopping g-img-cover"></i>
+      <span>
+        共
+        <span class="c-product-popper__title__number"> {{ total }} </span>
+        件商品
+      </span>
     </div>
-    <div
-      class="c-product__wrap"
-      v-if="products.length"
-      ref="productWrap"
-      @scroll="handleScroll">
-      <template v-for="(item, index) in products">
-        <product-item
-          :key="item.productId"
-          :number="total - index"
-          :item="item" />
-      </template>
-    </div>
-
-    <div
-      v-else
-      class="c-product__empty">
-      <img src="./imgs/product-empty.png" class="c-product__empty__img" />
-      <span>宝贝还没上架，敬请期待</span>
+    <div class="c-product-list__wrap">
+      <product-list
+        class="c-product-list"
+        v-if="productSdk"
+        :product-sdk="productSdk"
+        :totalVisible="false"
+        @total-change="num => (total = num)"
+        @browse-product="handleBrowseProduct"
+        @click-buy="handleClickBuy" />
     </div>
   </popper>
 </template>
 
 <script>
-import { liveSdk, PolyvLiveSdk } from '../../assets/live-sdk/live-sdk';
+import { Product } from '@polyv/interactions-receive-sdk';
+import ProductList from '@polyv/interactions-receive-sdk-ui-default/lib/MobileProduct';
 import { SHOPPING_VISIBLE, bus } from '../../assets/utils/event-bus';
-import Popper from '../Popper/Popper';
-import mixin from './mixin';
-import ProductItem from './ProductItem';
+import Popper from '../Popper/Popper.vue';
 
 export default {
+  components: {
+    Popper,
+    ProductList
+  },
+
   data() {
     return {
-      visible: false
+      // 商品库弹窗是否可见
+      shoppingVisible: false,
+      // 商品库 SDK 实例
+      productSdk: null,
+      // 商品总数
+      total: 0
     };
   },
 
-  mixins: [mixin],
-
-  components: {
-    Popper,
-    ProductItem,
-  },
-
-  methods: {
-    async handleVisible(visible) {
-      if (visible) {
-        await this.init();
+  created() {
+    this.bindEvts();
+    this.productSdk = new Product();
+    this.productSdk.on(this.productSdk.events.PRODUCT_MESSAGE, msg => {
+      const ProductMessageStatus = this.productSdk.ProductMessageStatus;
+      const status = `${msg.status}`;
+      if (status === ProductMessageStatus.ProductSwitch) {
+        this.$emit('change-switch', msg.content.enabled);
       }
-      this.visible = visible;
-    },
-    handleSocketMsg(event, data) {
-      this.visible && this.handleProductMsg(data);
-    }
-  },
-
-  mounted() {
-    bus.$on(SHOPPING_VISIBLE, this.handleVisible);
-    liveSdk.on(PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE, this.handleSocketMsg);
+    });
   },
 
   beforeDestroy() {
-    bus.$off(SHOPPING_VISIBLE, this.handleVisible);
-    liveSdk.off(PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE, this.handleSocketMsg);
+    this.productSdk && this.productSdk.destroy();
+    this.productSdk = null;
+    this.unbindEvts();
+  },
+
+  methods: {
+    bindEvts() {
+      bus.$on(SHOPPING_VISIBLE, this.onShoppingVisible);
+    },
+    unbindEvts() {
+      bus.$off(SHOPPING_VISIBLE, this.onShoppingVisible);
+    },
+    onShoppingVisible(shoppingVisible) {
+      this.shoppingVisible = shoppingVisible;
+    },
+    handleBrowseProduct(data) {
+      // TODO 用于统计用户数据
+      console.info('handleBrowseProduct', data);
+    },
+    handleClickBuy(data) {
+      // TODO 用户统计点击商品
+      console.info('handleBrowseProduct', data);
+    }
   }
 };
 </script>
 
-<style>
-.c-product__title {
+<style lang="scss">
+.c-product-popper .c-popper__content {
+  padding-top: 54px;
+}
+.c-product-popper .c-popper__content .c-popper__content__title {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 54px;
+  line-height: 54px;
+}
+.c-product-popper .c-popper__content__title .i-close {
+  margin-right: 32px;
+}
+
+.c-product-popper__title {
   display: flex;
   align-items: center;
   font-size: 12px;
 }
-.c-product__title .i-shopping {
+.c-product-popper__title .i-shopping {
   width: 12px;
   height: 12px;
   margin-right: 5px;
+  display: inline-block;
 }
-.c-product__empty {
-  position: absolute;
-  top: 55px;
-  bottom: 0;
+.c-product-popper__title .c-product-popper__title__number {
+  color: #ff9911;
+}
+
+.c-product-list__wrap {
+  height: 100%;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: rgba(255, 255, 255, .6);
-  font-size: 14px;
 }
-.c-product__empty__img {
-  width: 88px;
-  height: 88px;
-  margin-bottom: 8px;
-  object-fit: cover;
+.c-product-list.plv-iar-product {
+  background: none;
 }
-.c-product__wrap {
-  position: absolute;
-  top: 55px;
-  bottom: 0;
-  width: 100%;
-  overflow-y: auto;
+.c-product-list .plv-iar-product__content {
+  background-color: unset;
+  color: inherit;
 }
 </style>

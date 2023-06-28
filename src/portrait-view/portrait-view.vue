@@ -11,21 +11,58 @@
     <questionnaire v-show="!isSmallWindow" />
     <!-- 答题卡 -->
     <answer-card v-show="!isSmallWindow" />
-    <!-- 答题卡 -->
+    <!-- 快速答题卡 -->
     <quick-answer-card v-show="!isSmallWindow" />
+    <!-- 举报反馈/投诉 -->
+    <feed-back v-show="!isSmallWindow" />
     <!-- 关注公众号 -->
     <promotion-layer
       v-show="!isSmallWindow"
       :visible="promotionLayerVisible"
       :data="channelDetail.channelPromotion"
-      @close="promotionLayerVisible = false"/>
+      @close="promotionLayerVisible = false" />
     <!-- 播放器 -->
     <player
+      ref="cPlayer"
       :channel="channelDetail"
       :is-small-window="isSmallWindow"
       :client-width="clientWidth"
       @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
+    <template v-if="isRtcState">
+      <div
+        class="c-rtc__list"
+        :class="{
+          'c-rtc__list__vertical': isVertical,
+          'c-rtc__list__horizontal': !isVertical
+        }">
+        <main-item
+          elId="master"
+          class="c-rtc-master-item"
+          :stream="masterStream"
+          @resume="resetMasterPlayState" />
+        <div class="c-rtc__list-other">
+          <template v-for="(item) of rtcList">
+            <main-item
+              :elId="item.streamId"
+              :key="item.streamId"
+              :stream="item.stream"
+              @resume="resetRtcListPlayState(item.streamId)"
+              class="c-rtc__list-other-item"
+            />
+          </template>
+        </div>
+      </div>
+      <local-rtc-item
+        v-if="localStream"
+        can-drag
+        :mic-on="localStreamMic"
+        :cam-on="localStreamCam"
+        :nick="rtcInstance.config.nick"
+        :up-link="localUplink"
+        :video-link="videoLink"
+      />
+    </template>
 
     <div class="c-portrait-view__swiper__wrap">
       <swiper
@@ -73,8 +110,6 @@
             <donate
               v-if="donateGoodEnabled"
               :channel="channelDetail" />
-            <!-- 商品推送气泡 -->
-            <product-bubble v-if="productEnabled" />
             <!-- 商品列表 -->
             <product-list v-if="productEnabled" />
             <!-- 播放器控制器 -->
@@ -93,6 +128,12 @@
         </swiper-slide>
       </swiper>
     </div>
+    <Dialog
+      v-if="handUpDialog"
+      title="确定挂断连麦吗"
+      @confirm="handUp"
+      @cancel="handUpDialog = false"
+    />
   </div>
 </template>
 
@@ -101,6 +142,7 @@ import mixin from './mixin';
 import playerControlMixin from './mixins/player-control';
 import channelBaseMixin from '../assets/mixins/channel-base';
 import WebViewMixin from './mixins/webview';
+import RtcMixin from './mixins/rtc-mixin';
 import { createLiveSdk, destroyLiveSdk } from '../assets/live-sdk/live-sdk';
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import 'swiper/css/swiper.css';
@@ -112,7 +154,6 @@ import BulletinPanel from '../components/Bulletin/BulletinPanel';
 import Intro from '../components/Intro/Intro';
 import Chat from '../components/Chat/Chat';
 import Donate from '../components/Donate/Donate';
-import ProductBubble from '../components/ProductBubble/ProductBubble';
 import ProductList from '../components/ProductList/ProductList';
 import PlayerUi from '../components/PlayerUI/PlayerUI';
 import BoundaryWrap from './components/BoundaryWrap';
@@ -121,14 +162,18 @@ import ChapterList from '../components/ChapterList/ChapterList';
 import Questionnaire from '../components/Questionnaire/MobileQuestionnaire';
 import AnswerCard from '../components/AnswerCard/MobileAnswerCard';
 import QuickAnswerCard from '../components/AnswerCard/MobileQuickAnswerCard';
+import FeedBack from '../components/FeedBack/MobileFeedBack.vue';
 import PromotionLayer from '../components/PromotionLayer/PromotionLayer';
 import MobileLottery from '../components/Lottery/MobileLottery';
 import MobileCheckIn from '../components/CheckIn/MobileCheckIn';
+import MainItem from '../components/Rtc/RtcContainer/main-item.vue';
+import LocalRtcItem from '../components/Rtc/RtcContainer/local-rtc-item.vue';
+import Dialog from '../components/Dialog/dialog.vue';
 
 export default {
   name: 'plv-portrait-view',
 
-  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin],
+  mixins: [channelBaseMixin, mixin, playerControlMixin, WebViewMixin, RtcMixin],
 
   data() {
     return {
@@ -158,7 +203,6 @@ export default {
     Intro,
     Chat,
     Donate,
-    ProductBubble,
     ProductList,
     PlayerUi,
     BoundaryWrap,
@@ -167,9 +211,13 @@ export default {
     Questionnaire,
     AnswerCard,
     QuickAnswerCard,
+    FeedBack,
     PromotionLayer,
     MobileLottery,
     MobileCheckIn,
+    MainItem,
+    LocalRtcItem,
+    Dialog,
   },
 
   methods: {
@@ -181,6 +229,11 @@ export default {
   },
   mounted() {
     this.initPortrait();
+    window.addEventListener('pageshow', function(event) {
+      if ((event.persisted || window.performance) && window.performance.navigation.type === 2) {
+        location.reload();
+      }
+    }, false);
   },
 
   beforeDestroy() {
@@ -194,13 +247,18 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+html {
+  height: 100%;
+}
 /* 避免小窗口下 网速慢时出现白屏 */
 body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  background: url('../components/Player/imgs/player-bg.png');
+  height: 100%;
+  overflow: hidden;
+  background-image: url('../components/Player/imgs/player-bg.png');
+  background-size: cover;
 }
 .c-portrait-view {
   position: fixed;
@@ -210,7 +268,41 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Microsoft YaHei, Arial,sans-serif;
   line-height: 1;
   box-sizing: border-box;
+  height: 100%;
 }
+
+.c-rtc__list {
+  position: absolute;
+  z-index: 10;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.c-rtc__list__vertical {
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+
+.c-rtc__list__horizontal {
+  top: 16.6%;
+}
+
+.c-rtc-master-item {
+  height: calc(100% - 80px);
+}
+
+.c-rtc__list-other {
+  height: 80px;
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.c-rtc__list-other-item {
+  height: 100%;
+  display: inline-block;
+}
+
 .c-portrait-view__swiper__wrap {
   height: 100%;
   position: relative;
@@ -242,5 +334,8 @@ body {
 }
 .p-watch--small-window .c-player {
   z-index: 10001;
+}
+.c-hide {
+  display: none !important;
 }
 </style>

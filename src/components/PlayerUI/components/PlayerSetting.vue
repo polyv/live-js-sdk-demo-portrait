@@ -72,6 +72,18 @@
         <i class="c-player-setting__content__item__icon g-icon i-rate"></i>
         <span class="c-player-setting__content__item__text">切换倍速</span>
       </div>
+      <!-- 举报投诉 -->
+      <div
+        v-if="watchFeedbackEnabled"
+        class="c-player-setting__content__item"
+        @click="handleClickFeedBack">
+        <i
+          :class="[
+            'c-player-setting__content__item__icon',
+            'g-icon',
+            'i-feed']"></i>
+        <span class="c-player-setting__content__item__text">举报投诉</span>
+      </div>
     </ul>
 
     <!-- 清晰度选择 -->
@@ -88,11 +100,12 @@
       :list="rateList"
       class="c-player-setting--rate"
       @change="handleChangeRate($event.value)" />
+
   </popper>
 </template>
 
 <script>
-import { PLAYER_SETTING_VISIBLE, ONLY_HOST, bus } from '../../../assets/utils/event-bus';
+import { PLAYER_SETTING_VISIBLE, ONLY_HOST, FEED_BACK_VISIBLE, bus } from '../../../assets/utils/event-bus';
 import Popper from '../../Popper/Popper';
 import channelBaseMixin from '../../../assets/mixins/channel-base';
 import SettingSelect from './setting-select';
@@ -151,7 +164,7 @@ export default {
       const weixinDonateEnabled =
         this.ynToBool(this.channelData?.userConfig?.weixinAccountFunctionEnabled || 'Y') &&
         (donateCashEnabled ||
-        donateGoodEnabled);
+          donateGoodEnabled);
       const donatePointEnabled = this.ynToBool(donateSetting?.donatePointEnabled || 'N');
 
       return (weixinDonateEnabled || donatePointEnabled) && !this.isSeminar;
@@ -164,6 +177,10 @@ export default {
       const donatePointEnabled = this.ynToBool(donateSetting.donatePointEnabled);
 
       return (donateGoodEnabled || donatePointEnabled);
+    },
+
+    watchFeedbackEnabled() {
+      return this.ynToBool(this.channelData.watchFeedbackEnabled || 'N');
     }
   },
 
@@ -204,7 +221,11 @@ export default {
         this.onlyHost = true;
       }
       bus.$emit(ONLY_HOST, this.onlyHost);
-    }
+    },
+    handleClickFeedBack() {
+      this.visible = false;
+      bus.$emit(FEED_BACK_VISIBLE, true);
+    },
   },
 
   mounted() {
@@ -218,15 +239,19 @@ export default {
 
 <style>
 .c-player-setting__content {
-  padding: 10px 0 30px;
+  padding: 10px 0 30px 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
 }
 .c-player-setting__content__item {
   display: inline-flex;
-  width: 72px;
-  justify-content: center;
+  width: 20%;
   align-items: center;
   flex-direction: column;
+  height: 72px;
+  box-sizing: border-box;
+  margin-top: 10px;
 }
 .c-player-setting__content__item__icon {
   width: 32px;

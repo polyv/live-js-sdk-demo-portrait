@@ -78,6 +78,14 @@ export default {
         controller: false,
         useH5Page: true,
         lowLatency: true,
+        rtc: true,
+        lowLatencyConfig: {
+          // 是否显示每个人的控制栏, 默认显示，如果没有视频或者关闭摄像头则还会显示
+          controls: false,
+          // 是否隐藏每个人的昵称, 默认显示
+          hideNickname: true,
+          drag: true,
+        },
       };
       if (this.isPPT) {
         playerOptions.pptEl = '#doc-container';
