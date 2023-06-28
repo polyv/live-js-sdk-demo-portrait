@@ -156,7 +156,7 @@ export default {
             console.info('订阅失败', err);
           });
         } else {
-          this.$set(this.rtcList, evt.streamId, evt.stream);
+          this.$set(this.rtcList, evt.streamId, evt);
           this.$nextTick(() => {
             evt.subscribe({
               element: document.getElementById(`plv-rtc-item__${evt.streamId}`),
@@ -222,6 +222,8 @@ export default {
 
     resetMasterPlayState() {
       this.$set(this.masterStream, 'playFail', false);
+      const { width, height } = this.masterStream.mediaStream_.getVideoTracks()[0].getSettings();
+      this.isVertical = height > width;
     }
   }
 };

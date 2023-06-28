@@ -147,6 +147,7 @@ export default {
 #plv-rtc-item__local {
   height: 100%;
   width: 100%;
+  z-index: 1;
 
   .pv-rtc-player-video {
     background: unset !important;
@@ -162,21 +163,22 @@ export default {
   height: 102%;
   width: 102%;
   left: -1%;
+  z-index: 2;
 }
 .plv-rtc-item__net {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   right: 8px;
   top: 8px;
 }
 .plv-rtc-item__bg {
   position: absolute;
-  z-index: 1;
   height: 60px;
   width: 100%;
   bottom: 0;
   left: 0;
   background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+  z-index: 3;
 }
 .c-rtc-item__local__auto-connect {
   transition: transform ease-in-out .3s;
@@ -189,6 +191,6 @@ export default {
   height: 35px;
   box-sizing: border-box;
   padding: 8px;
-  z-index: 2;
+  z-index: 3;
 }
 </style>
