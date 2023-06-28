@@ -4,7 +4,7 @@
 
 import './index.scss';
 
-const getMicBtnTemplate = () => {
+const getMicBtnTemplate = (showVideo) => {
   const template = `
     <div class="rtc-toolkit rtc-toolkit-hide-border rtc-toolkit-switch-hide">
       <div class="rtc-toolkit-layout js-toolkitLayout">
@@ -12,7 +12,7 @@ const getMicBtnTemplate = () => {
         <span class="rtc-toolkit-apply" data-mic="applyAndStop"></span>
         <div class="rtc-toolkit-text js-text" data-lang-type></div>
         <div class="rtc-toolkit-control">
-          <span class="rtc-toolkit-cam" data-mic="camera"></span>
+          ${showVideo ? '\n<span class="rtc-toolkit-cam" data-mic="camera"></span>' : ''}
           <span class="rtc-toolkit-switch" data-mic="switch"></span>
           <span class="rtc-toolkit-mic" data-mic="mic"></span>
         </div>
@@ -62,8 +62,8 @@ function initSlider($touch) {
 
 }
 
-export default function(callback, getlang) {
-  const rtcToolkit = getMicBtnTemplate();
+export default function(callback, getlang, showVideo = true) {
+  const rtcToolkit = getMicBtnTemplate(showVideo);
   const cancelClass = 'rtc-toolkit-cancel';
   const successClass = 'rtc-toolkit-success';
   const camOffClass = 'rtc-toolkit-cam-off';

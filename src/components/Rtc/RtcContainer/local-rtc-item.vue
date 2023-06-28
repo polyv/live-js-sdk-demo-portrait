@@ -143,6 +143,7 @@ export default {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.16);
+  user-select: none !important;
 }
 #plv-rtc-item__local {
   height: 100%;
@@ -164,6 +165,7 @@ export default {
   width: 102%;
   left: -1%;
   z-index: 2;
+  user-select: none !important;
 }
 .plv-rtc-item__net {
   position: absolute;
@@ -192,5 +194,6 @@ export default {
   box-sizing: border-box;
   padding: 8px;
   z-index: 3;
+  user-select: none !important;
 }
 </style>

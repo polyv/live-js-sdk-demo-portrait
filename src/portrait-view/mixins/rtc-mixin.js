@@ -78,7 +78,7 @@ export default {
               calling: '请求中...',
             };
             return lang[type];
-          });
+          }, this.videoLink);
         }
         this.toolkit && this.toolkit.show();
       });
@@ -87,6 +87,7 @@ export default {
         console.info('讲师关闭连麦，可禁止发起连麦申请', evt);
         this.showLinkButton = false;
         this.toolkit && this.toolkit.hide();
+        this.toolkit = '';
       });
 
       this.rtcInstance.on('ALLOW_MICROPHONE', (evt) => {
