@@ -30,7 +30,12 @@
       @handleChangeToNormal="waitForRecover"
       @player-init="handlePlayerInit" />
     <template v-if="isRtcState">
-      <div class="c-rtc__list" :style="`height: ${rtcListHeight}px`">
+      <div
+        class="c-rtc__list"
+        :class="{
+          'c-rtc__list__vertical': isVertical,
+          'c-rtc__list__horizontal': !isVertical
+        }">
         <main-item
           elId="master"
           class="c-rtc-master-item"
@@ -270,8 +275,16 @@ body {
   position: absolute;
   z-index: 10;
   overflow-x: auto;
-  top: 16.6%;
   width: 100%;
+}
+
+.c-rtc__list__vertical {
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+
+.c-rtc__list__horizontal {
+  top: 16.6%;
 }
 
 .c-rtc-master-item {

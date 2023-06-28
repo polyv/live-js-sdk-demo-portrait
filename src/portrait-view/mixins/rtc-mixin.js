@@ -8,19 +8,18 @@ export default {
       showLinkButton: false,
       rtcList: {},
       localStream: '',
-      masterStream: '',
+      masterStream: {},
       isRtcState: false,
       toolkit: '',
       localStreamCam: true,
       localStreamMic: true,
       localUplink: 0,
       handUpDialog: false,
-      rtcListHeight: 0,
       videoLink: true,
+      isVertical: true
     };
   },
   mounted() {
-    this.calcRtcListHeight();
   },
 
   beforeDestroy() {
@@ -150,6 +149,8 @@ export default {
                 console.info('当前流播放失败');
                 this.$set(this.masterStream, 'playFail', true);
               }
+              const { width, height } = this.masterStream.mediaStream_.getVideoTracks()[0].getSettings();
+              this.isVertical = height > width;
             }
           }, (err) => {
             console.info('订阅失败', err);
@@ -213,10 +214,6 @@ export default {
     handUp() {
       this.rtcInstance.leaveChannel(false);
       this.handUpDialog = false;
-    },
-
-    calcRtcListHeight() {
-      this.rtcListHeight = Math.ceil(9 * document.body.clientWidth / 16) + 80;
     },
 
     resetRtcListPlayState(id) {
