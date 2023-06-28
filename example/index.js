@@ -19,8 +19,8 @@ new PolyvPortraitWatch({
   appSecret: params.appSecret || "APP_SECRET",
   channelId: params.channelId || "CHANNEL_ID",
   user: {
-    userId: "123456",
-    userName: "polyv-test"
+    userId: params.userId || "123456",
+    userName: params.userName || "polyv-test"
   }
 });
 
