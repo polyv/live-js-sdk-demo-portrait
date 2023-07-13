@@ -110,8 +110,10 @@ export default {
       });
       // 监听商品库事件
       liveSdk.on(PolyvLiveSdk.EVENTS.PRODUCT_MESSAGE, this.handleProductSocket);
-      // 监听聊天室开关事件
+      // 监听聊天室关闭事件
       liveSdk.on(PolyvLiveSdk.EVENTS.CLOSE_ROOM, this.handleCloseRoom);
+      // 监听聊天室开启事件
+      liveSdk.on(PolyvLiveSdk.EVENTS.OPEN_ROOM, this.handleCloseRoom);
       // 监听章节初始化事件
       liveSdk.on(PolyvLiveSdk.EVENTS.PLAYBACK_INIT, this.handlePlaybackInit);
       // 监听用户被踢出事件
