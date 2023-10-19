@@ -29,6 +29,7 @@ export async function createLiveSdk() {
   destroyLiveSdk();
   liveSdk = new PolyvLiveSdk({
     channelId,
+	updatePageview: true,  // 开启访问次数上报
     param4: config.param4, // 统计参数param4
     param5: config.param5, // 统计参数param5
     user: config.user,
